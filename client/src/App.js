@@ -2,7 +2,7 @@
 import React, { useRef } from 'react';
 import Webcam from 'react-webcam';
 import * as posenet from '@tensorflow-models/posenet';
-import { drawKeypoints, drawSkeleton } from "./utilities";
+import { drawKeypoints, drawSkeleton, drawPushupBird } from "./utilities";
 
 function App() {
     const webcamRef = useRef(null);
@@ -37,7 +37,7 @@ function App() {
 
             // Make Detections
             const pose = await net.estimateSinglePose(video);
-            console.log(pose);
+            // console.log(pose);
 
             drawCanvas(pose, video, videoWidth, videoHeight, canvasRef);
         }
@@ -48,8 +48,9 @@ function App() {
         canvas.current.width = videoWidth;
         canvas.current.height = videoHeight;
     
-        drawKeypoints(pose["keypoints"], 0.6, ctx);
-        drawSkeleton(pose["keypoints"], 0.7, ctx);
+        // drawKeypoints(pose["keypoints"], 0.6, ctx);
+        drawPushupBird(pose["keypoints"], 0.6, ctx, canvas.current.width)
+        // drawSkeleton(pose["keypoints"], 0.7, ctx);
     };
 
     runPosenet();

@@ -132,13 +132,45 @@ export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
     }
 
     const { y, x } = keypoint.position;
-    drawPoint(ctx, y * scale, x * scale, 3, color);
+    // drawPoint(ctx, y * scale, x * scale, 3, color);
 
-    if ((keypoint.part === "rightShoulder" || keypoint.part === "leftShoulder") && keypoint.score > minConfidence && !drawn) {
+    
+
+    if ((keypoint.part === "rightShoulder" || keypoint.part === "leftShoulder") && keypoint.score > minConfidence) {
       console.log("found shoulder")
       drawn = true
-      drawPoint(ctx, keypoint.position.y * scale, keypoint.position.x * scale, "red")
+      drawPoint(ctx, y * scale, x * scale, 5, "red")
     }
+  }
+}
+
+/**
+ * Drawbird for pushups
+ */
+export function drawPushupBird(keypoints, minConfidence, ctx, width, scale = 1) {
+  let sum = 0
+  let numPoints = 0
+  console.log(width)
+  for (let i = 0; i < keypoints.length; i++) {
+    const keypoint = keypoints[i];
+
+    if (keypoint.score < minConfidence) {
+      continue;
+    }
+
+    const { y, x } = keypoint.position;
+    // drawPoint(ctx, y * scale, x * scale, 3, color);
+
+    let yPos = 0.2 * width
+
+    if ((keypoint.part === "rightShoulder" || keypoint.part === "leftShoulder") && keypoint.score > minConfidence) {
+      sum += y
+      numPoints += 1
+    }
+  }
+
+  if (numPoints > 0) {
+    drawPoint(ctx, (sum / 2) * scale, width * 0.2, 5, "red")
   }
 }
 
