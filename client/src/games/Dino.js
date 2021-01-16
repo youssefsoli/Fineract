@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import isTouchingShoulder from '../../src/motionDetection';
 
-const FlappyBird = ({ pose, canvasRef, ...props }) => {
+const Dino = ({ pose, canvasRef, ...props }) => {
 
     //     var game;
     // var FPS = 60;
@@ -284,16 +284,20 @@ const FlappyBird = ({ pose, canvasRef, ...props }) => {
     const draw = (ctx) => {
         const pose = canvasRef.current.pose;
         if(!pose) return;
+
+
+
+
         console.log(pose);
         ctx.fillStyle = '#000000';
         const {x, y} = pose.keypoints[0].position;
-        console.log(ctx.canvas.width, ctx.canvas.height);
-        ctx.fillRect(x, y, 80, 80);
+        // console.log(ctx.canvas.width, ctx.canvas.height);
+        // ctx.fillRect(x, y, 80, 80);
 
         let img = new Image()
-        img.src = "../../logo512.png"
+        img.src = "assets/dino.png"
 
-        ctx.drawImage(img, 20, 20)
+        ctx.drawImage(img, 20, 200)
     };
 
     const render = () => {
@@ -318,4 +322,4 @@ const FlappyBird = ({ pose, canvasRef, ...props }) => {
     );
 };
 
-export default FlappyBird;
+export default Dino;
