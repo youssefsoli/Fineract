@@ -26,7 +26,6 @@ function App() {
                 detect(net);
             }, 30);
         };
-        console.log(net);
         runPosenet();
     }, [net]);
 
@@ -46,8 +45,8 @@ function App() {
             webcamRef.current.video.width = videoWidth;
             webcamRef.current.video.height = videoHeight;
 
-            canvasRef.current.width = videoWidth;
-            canvasRef.current.height = videoHeight;
+            canvasRef.current.width = window.innerWidth;
+            canvasRef.current.height = window.innerHeight;
 
             // Make Detections
             const pose = await net.estimateSinglePose(video);
