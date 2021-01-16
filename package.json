@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon --ext js app.js"
+    "start": "cd ./client && yarn build && cd ../ && node app.js",
+    "dev": "nodemon --ext js app.js",
+    "get": "yarn && cd ./client && yarn"
   },
   "repository": "https://github.com/youssefsoli/HackTheNorth.git",
   "author": "youssefsoli <youssefdevelops@gmail.com>",
