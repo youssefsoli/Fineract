@@ -19,11 +19,11 @@ const FlappyBird = ({ pose, canvasRef, ...props }) => {
             this.gap = 85;
             this.constant = 0;
 
-            this.speed = 2;
+            this.speed = 8;
 
             this.bX = 10;
-
             this.score = 0;
+            this.distanceBetweenPipes = 200;
 
             // pipe coordinates
 
@@ -50,6 +50,23 @@ const FlappyBird = ({ pose, canvasRef, ...props }) => {
 
         ctx.drawImage(game.bg, 0, 0);
 
+        if (
+            game.pipe[game.pipe.length - 1].x <
+            game.cvs.width - game.distanceBetweenPipes
+        ) {
+            console.log('56');
+            game.pipe.push({
+                x: game.cvs.width,
+                y:
+                    Math.floor(Math.random() * game.pipeNorth.height) -
+                    game.pipeNorth.height,
+            });
+        }
+
+        if (game.pipe[0].x < 0) {
+            game.pipe.splice(0, 1);
+        }
+
         for (let i = 0; i < game.pipe.length; i++) {
             game.constant = game.pipeNorth.height + game.gap;
             ctx.drawImage(game.pipeNorth, game.pipe[i].x, game.pipe[i].y);
@@ -60,16 +77,6 @@ const FlappyBird = ({ pose, canvasRef, ...props }) => {
             );
 
             game.pipe[i].x -= game.speed;
-
-            if (game.pipe[i].x < 0) {
-                game.pipe.push({
-                    x: game.cvs.width,
-                    y:
-                        Math.floor(Math.random() * game.pipeNorth.height) -
-                        game.pipeNorth.height,
-                });
-                game.pipe.splice(i, 1);
-            }
 
             // detect collision
 

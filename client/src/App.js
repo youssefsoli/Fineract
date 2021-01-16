@@ -63,38 +63,38 @@ function App() {
 
     return (
         <div className="App">
-                <Webcam
-                    ref={webcamRef}
-                    style={{
-                        position: 'absolute',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                        left: 0,
-                        right: 0,
-                        textAlign: 'center',
-                        zindex: 9,
-                        width: 'auto',
-                        height: '100%',
-                    }}
-                />
+            <Webcam
+                ref={webcamRef}
+                style={{
+                    position: 'absolute',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    left: 0,
+                    right: 0,
+                    textAlign: 'center',
+                    zindex: 9,
+                    width: 'auto',
+                    height: '100%',
+                }}
+            />
 
-                <canvas
-                    ref={canvasRef}
-                    style={{
-                        position: 'absolute',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                        left: 0,
-                        right: 0,
-                        textAlign: 'center',
-                        zindex: 9,
-                        width: '100%',
-                        height: '100%',
-                    }}
-                />
-                {canvasRef.current && (
-                    <FlappyBird pose={pose} canvasRef={canvasRef} />
-                )}
+            <canvas
+                ref={canvasRef}
+                style={{
+                    position: 'absolute',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    left: 0,
+                    right: 0,
+                    textAlign: 'center',
+                    zindex: 9,
+                    width: '100%',
+                    height: '100%',
+                }}
+            />
+            {canvasRef.current && (
+                <FlappyBird pose={pose} canvasRef={canvasRef} />
+            )}
         </div>
     );
 }
