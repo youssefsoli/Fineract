@@ -1,29 +1,39 @@
 // import './App.css';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import * as posenet from '@tensorflow-models/posenet';
-// import FlappyBird from './FlappyBird'
+import FlappyBird from './games/FlappyBird';
+import useNet from './useLoadNet';
 
 function App() {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
+    const net = useNet({
+        inputResolution: { width: 160, height: 120 },
+        scale: 0.8,
+    });
     const [pose, setPose] = useState(false);
 
-    //  Load posenet
-    const runPosenet = async () => {
-        const net = await posenet.load({
-            inputResolution: { width: 160, height: 120 },
-            scale: 0.8,
-        });
+    useEffect(() => {
+        if (!net) return () => {}
+        if ([net].some(elem => elem instanceof Error)) return () => {}
 
-        detect(net);
-    };
+        //  Load posenet
+        const runPosenet = async () => {
+            setInterval(() => {
+                detect(net);
+            }, 50);
+        };
+        console.log(net);
+        runPosenet();
+    }, [net]);
 
-    const detect = async (net) => {
+    const detect = async net => {
         if (
             typeof webcamRef.current !== 'undefined' &&
             webcamRef.current !== null &&
-            webcamRef.current.video.readyState === 4
+            webcamRef.current.video.readyState === 4 &&
+            net !== null
         ) {
             // Get Video Properties
             const video = webcamRef.current.video;
@@ -35,17 +45,15 @@ function App() {
             webcamRef.current.video.height = videoHeight;
 
             // Make Detections
-            setPose(await net.estimateSinglePose(video));
-            console.log(pose);
+            const pose = await net.estimateSinglePose(video);
+            setPose(pose);
         }
     };
-
-    runPosenet();
 
     return (
         <div className="App">
             <header className="App-header">
-                {/* <Webcam
+                <Webcam
                     ref={webcamRef}
                     style={{
                         position: 'absolute',
@@ -73,8 +81,21 @@ function App() {
                         width: 640,
                         height: 480,
                     }}
-                /> */}
-                <FlappyBird />
+                />
+                <FlappyBird
+                    pose={pose}
+                    style={{
+                        position: 'absolute',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        left: 0,
+                        right: 0,
+                        textAlign: 'center',
+                        zindex: 9,
+                        width: 640,
+                        height: 480,
+                    }}
+                />
             </header>
         </div>
     );
