@@ -18,7 +18,7 @@ function App() {
 
     useEffect(() => {
         if (!net) return () => {};
-        if ([net].some((elem) => elem instanceof Error)) return () => {};
+        if ([net].some(elem => elem instanceof Error)) return () => {};
 
         //  Load posenet
         const runPosenet = async () => {
@@ -30,7 +30,7 @@ function App() {
         runPosenet();
     }, [net]);
 
-    const detect = async (net) => {
+    const detect = async net => {
         if (
             typeof webcamRef.current !== 'undefined' &&
             webcamRef.current !== null &&
@@ -83,25 +83,11 @@ function App() {
                         right: 0,
                         textAlign: 'center',
                         zindex: 9,
-                        width: 640,
-                        height: 480,
+                        width: '100%',
+                        height: '100%',
                     }}
                 />
-                <FlappyBird
-                    pose={pose}
-                    canvasRef={canvasRef}
-                    style={{
-                        position: 'absolute',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                        left: 0,
-                        right: 0,
-                        textAlign: 'center',
-                        zindex: 10,
-                        width: 640,
-                        height: 480,
-                    }}
-                />
+                {canvasRef.current && <FlappyBird pose={pose} canvasRef={canvasRef} />}
             </header>
         </div>
     );
