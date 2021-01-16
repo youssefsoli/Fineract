@@ -1,11 +1,13 @@
 // import './App.css';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import * as posenet from '@tensorflow-models/posenet';
+import FlappyBird from './FlappyBird'
 
 function App() {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
+    const [pose, setPose] = useState(false);
 
     //  Load posenet
     const runPosenet = async () => {
@@ -35,8 +37,7 @@ function App() {
             webcamRef.current.video.height = videoHeight;
 
             // Make Detections
-            const pose = await net.estimateSinglePose(video);
-            console.log(pose);
+            setPose(await net.estimateSinglePose(video));
         }
     };
 
@@ -45,7 +46,7 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <Webcam
+                {/* <Webcam
                     ref={webcamRef}
                     style={{
                         position: 'absolute',
@@ -73,7 +74,8 @@ function App() {
                         width: 640,
                         height: 480,
                     }}
-                />
+                /> */}
+                <FlappyBird />
             </header>
         </div>
     );
