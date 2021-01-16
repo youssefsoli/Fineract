@@ -283,18 +283,10 @@ const FlappyBird = ({ pose, ...props }) => {
 
     const draw = (ctx) => {
         if(!pose) return;
-        console.log(pose);
+        //console.log(pose);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         ctx.fillStyle = '#000000';
-        ctx.beginPath();
-        ctx.arc(
-            pose.keypoints[0].position.x,
-            pose.keypoints[0].position.y,
-            20,
-            0,
-            2 * Math.PI
-        );
-        ctx.fill();
+        ctx.fillRect(20, 20, 150, 100);
     };
 
     useEffect(() => {
