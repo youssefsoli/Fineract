@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import isTouchingShoulder from '../../src/motionDetection';
 
 const FlappyBird = ({ pose, canvasRef, ...props }) => {
 
