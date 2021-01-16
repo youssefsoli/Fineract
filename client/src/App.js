@@ -91,7 +91,7 @@ function App() {
                         left: 0,
                         right: 0,
                         textAlign: 'center',
-                        zindex: 9,
+                        zindex: 10,
                         width: 640,
                         height: 480,
                     }}
