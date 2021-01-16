@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import * as posenet from '@tensorflow-models/posenet';
-import FlappyBird from './FlappyBird'
+// import FlappyBird from './FlappyBird'
 
 function App() {
     const webcamRef = useRef(null);
