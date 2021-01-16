@@ -13,12 +13,13 @@ function App() {
         outputStride: 16,
         inputResolution: { width: 160, height: 120 },
         multiplier: 0.5,
+        imageScaleFactor: 0.3,
     });
     const [pose, setPose] = useState(false);
 
     useEffect(() => {
         if (!net) return () => {};
-        if ([net].some(elem => elem instanceof Error)) return () => {};
+        if ([net].some((elem) => elem instanceof Error)) return () => {};
 
         //  Load posenet
         const runPosenet = async () => {
@@ -29,7 +30,7 @@ function App() {
         runPosenet();
     }, [net]);
 
-    const detect = async net => {
+    const detect = async (net) => {
         if (
             typeof webcamRef.current !== 'undefined' &&
             webcamRef.current !== null &&
@@ -50,6 +51,12 @@ function App() {
 
             // Make Detections
             const pose = await net.estimateSinglePose(video);
+            pose.keypoints = pose.keypoints.map((keypoint) => {
+                keypoint.position.x *= window.innerWidth / videoWidth;
+                keypoint.position.y *= window.innerHeight / videoHeight;
+                return keypoint;
+            });
+
             setPose(pose);
         }
     };
@@ -67,8 +74,8 @@ function App() {
                         right: 0,
                         textAlign: 'center',
                         zindex: 9,
-                        width: 640,
-                        height: 480,
+                        width: 'auto',
+                        height: '100%',
                     }}
                 />
 
@@ -86,7 +93,9 @@ function App() {
                         height: '100%',
                     }}
                 />
-                {canvasRef.current && <FlappyBird pose={pose} canvasRef={canvasRef} />}
+                {canvasRef.current && (
+                    <FlappyBird pose={pose} canvasRef={canvasRef} />
+                )}
             </header>
         </div>
     );
