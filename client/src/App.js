@@ -9,14 +9,16 @@ function App() {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
     const net = useNet({
+        architecture: 'MobileNetV1',
+        outputStride: 16,
         inputResolution: { width: 160, height: 120 },
-        scale: 0.8,
+        multiplier: 0.5,
     });
     const [pose, setPose] = useState(false);
 
     useEffect(() => {
-        if (!net) return () => {}
-        if ([net].some(elem => elem instanceof Error)) return () => {}
+        if (!net) return () => {};
+        if ([net].some((elem) => elem instanceof Error)) return () => {};
 
         //  Load posenet
         const runPosenet = async () => {
@@ -28,7 +30,7 @@ function App() {
         runPosenet();
     }, [net]);
 
-    const detect = async net => {
+    const detect = async (net) => {
         if (
             typeof webcamRef.current !== 'undefined' &&
             webcamRef.current !== null &&

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import isTouchingShoulder from '../../src/motionDetection';
 
 const FlappyBird = ({ pose, ...props }) => {
     const canvasRef = useRef(null);
@@ -282,7 +283,7 @@ const FlappyBird = ({ pose, ...props }) => {
     // }
 
     const draw = (ctx) => {
-        if(!pose) return;
+        if (!pose) return;
         //console.log(pose);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         ctx.fillStyle = '#000000';
@@ -294,6 +295,7 @@ const FlappyBird = ({ pose, ...props }) => {
         const context = canvas.getContext('2d');
 
         draw(context);
+        isTouchingShoulder(pose);
     }, [pose]);
 
     return <canvas ref={canvasRef} {...props} />;
