@@ -15,10 +15,8 @@ function App() {
             inputResolution: { width: 160, height: 120 },
             scale: 0.8,
         });
-        //
-        setInterval(() => {
-            detect(net);
-        }, 30);
+
+        detect(net);
     };
 
     const detect = async (net) => {
@@ -38,6 +36,7 @@ function App() {
 
             // Make Detections
             setPose(await net.estimateSinglePose(video));
+            console.log(pose);
         }
     };
 
