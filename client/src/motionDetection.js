@@ -16,12 +16,10 @@ const isTouchingShoulder = (pose) => {
             Math.pow(rightWristPos.y - rightShoulderPos.y, 2)
     );
 
-    if (leftDistance < 130 && leftWristPos.y < 200) {
-        console.log('left touch!', leftDistance, leftWristPos);
-        return true;
-    }
-    if (rightDistance < 130 && rightWristPos.y < 200) {
-        console.log('right touch!', rightDistance, rightWristPos);
+    if (
+        (leftDistance < 130 && leftWristPos.y < 200) ||
+        (rightDistance < 130 && rightWristPos.y < 200)
+    ) {
         return true;
     }
     return false;
