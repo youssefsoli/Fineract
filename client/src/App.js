@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import * as posenet from '@tensorflow-models/posenet';
 import FlappyBird from './games/FlappyBird';
+import Dino from './games/Dino';
 import useNet from './useLoadNet';
 
 function App() {
@@ -78,23 +79,22 @@ function App() {
                 }}
             />
 
-            <canvas
-                ref={canvasRef}
-                style={{
-                    position: 'absolute',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    left: 0,
-                    right: 0,
-                    textAlign: 'center',
-                    zIndex: 9,
-                    width: '100%',
-                    height: '100%',
-                }}
-            />
-            {canvasRef.current && (
-                <FlappyBird pose={pose} canvasRef={canvasRef} webcamRef={webcamRef} />
-            )}
+                <canvas
+                    ref={canvasRef}
+                    style={{
+                        position: 'absolute',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        left: 0,
+                        right: 0,
+                        textAlign: 'center',
+                        zindex: 9,
+                        width: '100%',
+                        height: '100%',
+                    }}
+                />
+                {canvasRef.current && <Dino pose={pose} canvasRef={canvasRef} />}
+            </header>
         </div>
     );
 }
