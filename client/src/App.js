@@ -22,7 +22,7 @@ function App() {
         const runPosenet = async () => {
             setInterval(() => {
                 detect(net);
-            }, 50);
+            }, 30);
         };
         console.log(net);
         runPosenet();
@@ -43,6 +43,9 @@ function App() {
             // Set video width
             webcamRef.current.video.width = videoWidth;
             webcamRef.current.video.height = videoHeight;
+
+            canvasRef.current.width = videoWidth;
+            canvasRef.current.height = videoHeight;
 
             // Make Detections
             const pose = await net.estimateSinglePose(video);
@@ -84,6 +87,7 @@ function App() {
                 />
                 <FlappyBird
                     pose={pose}
+                    canvasRef={canvasRef}
                     style={{
                         position: 'absolute',
                         marginLeft: 'auto',

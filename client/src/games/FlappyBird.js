@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const FlappyBird = ({ pose, ...props }) => {
-    const canvasRef = useRef(null);
+const FlappyBird = ({ pose, canvasRef, ...props }) => {
 
     //     var game;
     // var FPS = 60;
@@ -282,21 +281,35 @@ const FlappyBird = ({ pose, ...props }) => {
     // }
 
     const draw = (ctx) => {
+        const pose = canvasRef.current.pose;
         if(!pose) return;
-        //console.log(pose);
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        console.log(pose);
         ctx.fillStyle = '#000000';
-        ctx.fillRect(20, 20, 150, 100);
+        const {x, y} = pose.keypoints[0].position;
+        console.log(ctx.canvas.width, ctx.canvas.height);
+        ctx.fillRect(x, y, 80, 80);
     };
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        const context = canvas.getContext('2d');
-
+    const render = () => {
+        const context = canvasRef.current.getContext('2d');
         draw(context);
+        //ctx.drawImage(background, 0, 0);
+        requestAnimationFrame(render);
+    }
+
+    useEffect(() => {
+        render();
+    }, []);
+
+    // When pose updates
+    useEffect(() => {
+        canvasRef.current.pose = pose;
     }, [pose]);
 
-    return <canvas ref={canvasRef} {...props} />;
+    return (
+        <>
+        </>
+    );
 };
 
 export default FlappyBird;
