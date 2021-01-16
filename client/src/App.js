@@ -1,4 +1,4 @@
-// import './App.css';
+import './App.css';
 import React, { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import * as posenet from '@tensorflow-models/posenet';
@@ -63,7 +63,6 @@ function App() {
 
     return (
         <div className="App">
-            <header className="App-header">
                 <Webcam
                     ref={webcamRef}
                     style={{
@@ -96,7 +95,6 @@ function App() {
                 {canvasRef.current && (
                     <FlappyBird pose={pose} canvasRef={canvasRef} />
                 )}
-            </header>
         </div>
     );
 }
