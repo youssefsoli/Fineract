@@ -90,7 +90,7 @@ function App() {
                                                     your excercises
                                                 </h1>
                                                 <p>
-                                                    Fineract Allows you to
+                                                    Fineract allows you to
                                                     gamify your excercises, by
                                                     literally playing a game
                                                     with your body. Choose from
@@ -272,7 +272,7 @@ function App() {
                                     textAlign: 'center',
                                     zIndex: 8,
                                     width: 'auto',
-                                    height: '100%',
+                                    height: '10%',
                                 }}
                             />
                             <canvas

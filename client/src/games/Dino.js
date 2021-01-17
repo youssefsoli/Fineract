@@ -78,15 +78,23 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 false
             );
 
-            // pause
             document.addEventListener(
-                'pause',
+                ' ',
                 () => {
-                    canvasRef.current.game.pause = true;
-                    setNav(true);
+                    canvasRef.current.game = new Game();
                 },
                 false
             );
+
+            // // pause
+            // document.addEventListener(
+            //     'pause',
+            //     () => {
+            //         canvasRef.current.game.pause = true;
+            //         setNav(true);
+            //     },
+            //     false
+            // );
 
             // resume
             document.addEventListener(
@@ -364,7 +372,7 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
             game.dinoState = 'crouching';
         }
 
-        ctx.drawImage(game.bg, 0, 0, window.innerWidth, window.innerHeight);
+        // ctx.drawImage(game.bg, 0, 0, window.innerWidth, window.innerHeight);
 
         let max_x = 0;
         for (let i = game.obstacles.length - 1; i >= 0; i--) {
