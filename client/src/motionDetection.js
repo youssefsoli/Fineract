@@ -33,23 +33,26 @@ const isTouchingRightShoulder = (pose) => {
 
 const isInAir = (pose, bodyPositions, screenHeight) => {
     // const measuredPositions = ["leftShoulder", "rightShoulder", "leftHip", "rightHip", "leftKnee", "rightKnee"]
-    const measuredPositions = ["leftHip", "rightHip"]
+    const measuredPositions = ['leftHip', 'rightHip'];
 
-    let diffSum = 0
-    let count = 0
-    let partsUsed = []
+    let diffSum = 0;
+    let count = 0;
+    let partsUsed = [];
 
     for (let i = 0; i < pose.keypoints.length; i++) {
-        let keypoint = pose.keypoints[i]
-        let bodypart = keypoint.part
+        let keypoint = pose.keypoints[i];
+        let bodypart = keypoint.part;
 
         if (measuredPositions.indexOf(bodypart) > -1 && keypoint.score > 0.6) {
-            let diff = Math.max(0, bodyPositions[bodypart].avg - keypoint.position.y)
+            let diff = Math.max(
+                0,
+                bodyPositions[bodypart].avg - keypoint.position.y
+            );
 
             if (diff > 0) {
-                partsUsed.push({part: bodypart, diff: diff})
-                diffSum += diff
-                count += 1
+                partsUsed.push({ part: bodypart, diff: diff });
+                diffSum += diff;
+                count += 1;
             }
         }
     }
@@ -69,6 +72,12 @@ const isInAir = (pose, bodyPositions, screenHeight) => {
     //     console.log(partsUsed)
     // }
 
+    // if(diffSum > 0) {
+    //     console.log("diffs")
+    //     console.log(diffSum)
+    //     console.log(count)
+    //     console.log(partsUsed)
+    // }
 
     // const leftHipPos = pose.keypoints[keypointIndex.leftHip].position;
     // const rightHipPos = pose.keypoints[keypointIndex.rightHip].position;
@@ -77,14 +86,10 @@ const isInAir = (pose, bodyPositions, screenHeight) => {
 
     // return averageHipHeight - normalHeight > verticalDistance * factor;
 
-    return jumping
+    return jumping;
 };
 
-const isCrouching = (
-    pose,
-    bodyPositions,
-    screenHeight
-) => {
+const isCrouching = (pose, bodyPositions, screenHeight) => {
     // const leftShoulderPos = pose.keypoints[keypointIndex.leftShoulder].position;
     // const rightShoulderPos =
     //     pose.keypoints[keypointIndex.rightShoulder].position;
@@ -92,22 +97,30 @@ const isCrouching = (
     // const verticalDistance = bottomHeight - normalHeight;
 
     // return averageShoulderHeight - normalHeight > verticalDistance * factor;
-    const measuredPositions = ["leftShoulder", "rightShoulder", "leftHip", "rightHip"]
+    const measuredPositions = [
+        'leftShoulder',
+        'rightShoulder',
+        'leftHip',
+        'rightHip',
+    ];
 
-    let diffSum = 0
-    let count = 0
+    let diffSum = 0;
+    let count = 0;
 
     for (let i = 0; i < pose.keypoints.length; i++) {
-        let keypoint = pose.keypoints[i]
-        let bodypart = keypoint.part
+        let keypoint = pose.keypoints[i];
+        let bodypart = keypoint.part;
 
         if (measuredPositions.indexOf(bodypart) > -1 && keypoint.score > 0.6) {
-            let diff = Math.max(keypoint.position.y - bodyPositions[bodypart].avg, 0)
-            diffSum += diff
-            count += 1
+            let diff = Math.max(
+                keypoint.position.y - bodyPositions[bodypart].avg,
+                0
+            );
+            diffSum += diff;
+            count += 1;
         }
     }
-    return (diffSum / count) > screenHeight * 0.4
+    return diffSum / count > screenHeight * 0.4;
 };
 
 export {

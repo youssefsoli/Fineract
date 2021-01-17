@@ -16,7 +16,7 @@ const drawPosition = (xCoor, yCoor, ctx, name, keypoints) => {
     let innerRadius = 5,
         outerRadius = 70,
         // Radius of the entire circle.
-        radius = 60;
+        radius = 120;
     let grd = ctx.createRadialGradient(
         xCoor,
         yCoor,
@@ -52,7 +52,7 @@ const drawPosition = (xCoor, yCoor, ctx, name, keypoints) => {
     return color === '#a0ff2b';
 };
 
-const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
+const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const [playScore] = useSound(scoreSfx);
     const bird = useRef(null);
     const bg = useRef(null);
@@ -65,6 +65,9 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         constructor() {
             this.cvs = canvasRef.current;
 
+            setNav(false);
+
+            //restart
             document.addEventListener(
                 'restart',
                 () => {
@@ -73,14 +76,37 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
                 false
             );
 
+<<<<<<< HEAD
             document.addEventListener(
                 ' ',
                 () => {
                     canvasRef.current.game = new Game();
+=======
+            // pause
+            document.addEventListener(
+                'pause',
+                () => {
+                    canvasRef.current.game.pause = true;
+                    setNav(true);
+>>>>>>> b1061eefff0398ffe8c45522321898ff38980be3
                 },
                 false
             );
 
+<<<<<<< HEAD
+=======
+            // resume
+            document.addEventListener(
+                'resume',
+                () => {
+                    canvasRef.current.game.pause = false;
+                    setNav(false);
+                },
+                false
+            );
+
+            // some variables
+>>>>>>> b1061eefff0398ffe8c45522321898ff38980be3
             this.tick = 0;
             this.over = false;
             this.upwards = 0;
@@ -92,6 +118,7 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
             this.dinoY = canvasRef.current.height - canvasRef.current.height * 0.3 - 50;
             this.dinoYBase = canvasRef.current.height - canvasRef.current.height * 0.3 - 50;
             this.cablibrationMode = true;
+            this.pause = false;
 
             this.bodyPositions = {
                 count: 0,
@@ -172,6 +199,44 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         const game = canvasRef.current.game;
         const pose = canvasRef.current.pose;
         if (!pose || !game) return;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, game.cvs.width, game.cvs.height);
+        if (game.over) {
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#000';
+            ctx.font = '60px Verdana';
+
+            ctx.fillText(
+                'Score : ' + game.score,
+                game.cvs.width / 2,
+                game.cvs.height / 2
+            );
+
+            ctx.font = '30px Verdana';
+            ctx.fillText(
+                'Tap your right shoulder with your right hand to restart',
+                game.cvs.width / 2,
+                game.cvs.height / 2 + 60
+            );
+            return;
+        }
+
+        if (game.pause) {
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#000';
+            ctx.font = '60px Verdana';
+            ctx.fillText('Paused', game.cvs.width / 2, game.cvs.height / 2);
+
+            ctx.font = '30px Verdana';
+            ctx.fillText(
+                'Tap your right shoulder with your right hand to resume',
+                game.cvs.width / 2,
+                game.cvs.height / 2 + 60
+            );
+            return;
+        }
+
         ctx.fillStyle = '#000000';
 
         game.tick += 1;
@@ -198,6 +263,7 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         const crouchingDinoWidth = dinoWidth;
         const crouchingDinoHeight = crouchingDinoWidth * (65 / 134);
 
+<<<<<<< HEAD
         if (game.over) {
             ctx.textAlign = 'center';
             ctx.fillStyle = '#000';
@@ -216,6 +282,9 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
             );
             return;
         }
+=======
+        drawPoint(ctx, game.bodyPositions.leftHip.avg, 20, 5, 'red');
+>>>>>>> b1061eefff0398ffe8c45522321898ff38980be3
 
         if (game.tick > 40 && game.bodyPositions.count < 100) {
             updatePositions(pose, game.bodyPositions);
@@ -256,6 +325,7 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
 
         if (collision) {
             game.over = true;
+            setNav(true);
         }
 
         game.dinoYBase = canvasRef.current.height - 450;
@@ -272,7 +342,6 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         );
 
         if (game.dinoState === 'jumping') {
-            console.log('jumping actions');
             game.upwards += 0.8;
         } else if (jumping) {
             game.upwards = -28;
@@ -288,7 +357,6 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
                 }
             }
         } else if (crouching) {
-            console.log('crouching');
             game.dinoState = 'crouching';
         }
 
@@ -388,7 +456,6 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         const context = canvasRef.current.getContext('2d');
         if (calibrationDraw(context, canvasRef.current.pose.keypoints)) {
             setCalibration(false);
-            console.log('done');
             return;
         }
         drawKeypoints(canvasRef.current.pose.keypoints, 0.6, context);

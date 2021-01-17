@@ -4,10 +4,9 @@ const DinoGame = ({ pose, canvasRef, ...props }) => {
     const draw = (ctx) => {
         const pose = canvasRef.current.pose;
         if (!pose) return;
-        console.log(pose);
         ctx.fillStyle = '#000000';
         const { x, y } = pose.keypoints[0].position;
-        console.log(ctx.canvas.width, ctx.canvas.height);
+        // console.log(ctx.canvas.width, ctx.canvas.height);
         ctx.fillRect(x - 100, y - 100, 200, 200);
     };
 
