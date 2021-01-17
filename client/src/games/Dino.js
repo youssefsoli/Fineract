@@ -76,25 +76,16 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 false
             );
 
-<<<<<<< HEAD
-            document.addEventListener(
-                ' ',
-                () => {
-                    canvasRef.current.game = new Game();
-=======
             // pause
             document.addEventListener(
                 'pause',
                 () => {
                     canvasRef.current.game.pause = true;
                     setNav(true);
->>>>>>> b1061eefff0398ffe8c45522321898ff38980be3
                 },
                 false
             );
 
-<<<<<<< HEAD
-=======
             // resume
             document.addEventListener(
                 'resume',
@@ -106,7 +97,6 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
             );
 
             // some variables
->>>>>>> b1061eefff0398ffe8c45522321898ff38980be3
             this.tick = 0;
             this.over = false;
             this.upwards = 0;
@@ -263,7 +253,6 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         const crouchingDinoWidth = dinoWidth;
         const crouchingDinoHeight = crouchingDinoWidth * (65 / 134);
 
-<<<<<<< HEAD
         if (game.over) {
             ctx.textAlign = 'center';
             ctx.fillStyle = '#000';
@@ -282,9 +271,6 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
             );
             return;
         }
-=======
-        drawPoint(ctx, game.bodyPositions.leftHip.avg, 20, 5, 'red');
->>>>>>> b1061eefff0398ffe8c45522321898ff38980be3
 
         if (game.tick > 40 && game.bodyPositions.count < 100) {
             updatePositions(pose, game.bodyPositions);
