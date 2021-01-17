@@ -112,6 +112,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
                 game.cvs.width / 2,
                 game.cvs.height / 2 + 60
             );
+            return;
         }
 
         const { x, y } = pose.keypoints[0].position;
