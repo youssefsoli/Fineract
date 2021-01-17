@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import useSound from 'use-sound';
 import scoreSfx from './assets/score.mp3';
-import isTouchingShoulder from '../../src/motionDetection';
+import {
+    isTouchingLeftShoulder,
+    isTouchingRightShoulder,
+} from '../../src/motionDetection';
 
 const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
     const [playScore] = useSound(scoreSfx);
@@ -15,13 +18,34 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
             this.cvs = canvasRef.current;
             console.log(this.cvs);
 
-            document.addEventListener("keypress", (e) => {
-                if(canvasRef.current.game.over && e.key === ' ')
+            // document.addEventListener(
+            //     'keypress',
+            //     (e) => {
+            //         if (&& e.key === ' ')
+            //             canvasRef.current.game = new Game();
+            //     },
+            //     false
+            // );
+
+            // restart
+            document.addEventListener(
+                'restart',
+                () => {
                     canvasRef.current.game = new Game();
-            }, false);
+                },
+                false
+            );
+
+            // pause
+            document.addEventListener(
+                'togglePause',
+                () => {
+                    canvasRef.current.game.pause = canvasRef.current.game.pause ? false : true;
+                },
+                false
+            );
 
             // some variables
-
             this.yScale = (window.innerHeight + window.innerWidth) / 1500;
             this.xScale = this.yScale;
 
@@ -35,11 +59,9 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
             this.bX = 10;
             this.score = 0;
             this.distanceBetweenPipes = 300 * this.xScale;
-
-            // pipe coordinates
-
             this.pipe = [];
             this.over = false;
+            this.pause = false;
 
             this.pipe[0] = {
                 x: window.innerWidth,
@@ -54,19 +76,42 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
         return Math.floor(Math.random() * (max - min + 1) + min);
     };
 
-    const draw = ctx => {
+    const draw = (ctx) => {
         const game = canvasRef.current.game;
         const pose = canvasRef.current.pose;
         if (!pose || !game) return;
 
-        if(game.over) {
-            ctx.textAlign = "center";
+        if (game.over) {
+            ctx.textAlign = 'center';
             ctx.fillStyle = '#000';
             ctx.font = '60px Verdana';
-            ctx.fillText('Score : ' + game.score, game.cvs.width/2, game.cvs.height/2);
+            ctx.fillText(
+                'Score : ' + game.score,
+                game.cvs.width / 2,
+                game.cvs.height / 2
+            );
 
             ctx.font = '30px Verdana';
-            ctx.fillText('Press Space to restart', game.cvs.width/2, game.cvs.height/2 + 60);
+            ctx.fillText(
+                'Tap your left shoulder with your left hand to restart',
+                game.cvs.width / 2,
+                game.cvs.height / 2 + 60
+            );
+            return;
+        }
+
+        if (game.pause) {
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#000';
+            ctx.font = '60px Verdana';
+            ctx.fillText('Paused', game.cvs.width / 2, game.cvs.height / 2);
+
+            ctx.font = '30px Verdana';
+            ctx.fillText(
+                'Tap your left shoulder with your left hand to resume',
+                game.cvs.width / 2,
+                game.cvs.height / 2 + 60
+            );
             return;
         }
 
@@ -85,7 +130,11 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
         ) {
             game.pipe.push({
                 x: game.cvs.width,
-                y: randInt((100 - game.pipeNorth.height) * game.yScale, game.cvs.height - ((game.pipeNorth.height + 100) * game.yScale)),
+                y: randInt(
+                    (100 - game.pipeNorth.height) * game.yScale,
+                    game.cvs.height -
+                        (game.pipeNorth.height + 100) * game.yScale
+                ),
             });
 
             //cons
@@ -121,11 +170,13 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
             // detect collision
 
             if (
-                game.bX + game.bird.width * game.xScale/2 >= game.pipe[i].x &&
+                game.bX + (game.bird.width * game.xScale) / 2 >=
+                    game.pipe[i].x &&
                 game.bX <=
                     game.pipe[i].x + game.pipeNorth.width * game.xScale &&
                 (y <= game.pipe[i].y + game.pipeNorth.height * game.yScale ||
-                    y + game.bird.height * game.yScale/2 >= game.pipe[i].y + game.constant)
+                    y + (game.bird.height * game.yScale) / 2 >=
+                        game.pipe[i].y + game.constant)
             ) {
                 game.over = true;
                 //canvasRef.current.game = new Game();
@@ -159,7 +210,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
         ctx.arc(x / 8, y / 8, 5, 0, 2 * Math.PI);
         ctx.fill();
 
-        ctx.textAlign = "center";
+        ctx.textAlign = 'center';
         ctx.fillStyle = '#000';
         ctx.font = '20px Verdana';
         ctx.fillText('Score : ' + game.score, 60, game.cvs.height - 20);
@@ -180,6 +231,19 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
     // When pose updates
     useEffect(() => {
         canvasRef.current.pose = pose;
+
+        if (canvasRef.current.game.over) {
+            if (isTouchingLeftShoulder(pose)) {
+                const event = new Event('restart');
+                document.dispatchEvent(event);
+            } else if (isTouchingRightShoulder(pose)) {
+                const event = new Event('exit');
+                document.dispatchEvent(event);
+            }
+        } else if (isTouchingLeftShoulder(pose)) {
+            const event = new Event('togglePause');
+            document.dispatchEvent(event);
+        }
     }, [pose]);
 
     return (
