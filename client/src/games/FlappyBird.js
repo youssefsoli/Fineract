@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import useSound from 'use-sound';
 import scoreSfx from './assets/score.mp3';
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client';
+import { useHistory } from 'react-router-dom';
 import {
     isTouchingLeftShoulder,
     isTouchingRightShoulder,
@@ -14,6 +15,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const pipeNorth = useRef(null);
     const pipeSouth = useRef(null);
     const socket = io(window.location.origin.toString());
+    const history = useHistory();
 
     class Game {
         constructor() {
@@ -46,6 +48,15 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 () => {
                     canvasRef.current.game.pause = false;
                     setNav(false);
+                },
+                false
+            );
+
+            // exit
+            document.addEventListener(
+                'exit',
+                () => {
+                    history.push('/');
                 },
                 false
             );
@@ -86,7 +97,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         const pose = canvasRef.current.pose;
         if (!pose || !game) return;
 
-        if(!canvasRef.current.started) {
+        if (!canvasRef.current.started) {
             ctx.textAlign = 'center';
             ctx.font = '60px Verdana';
             ctx.fillText(
@@ -112,6 +123,11 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 'Tap your right shoulder with your right hand to restart',
                 game.cvs.width / 2,
                 game.cvs.height / 2 + 60
+            );
+            ctx.fillText(
+                'Tap your left shoulder with your left hand to exit',
+                game.cvs.width / 2,
+                game.cvs.height / 2 + 120
             );
             return;
         }
@@ -234,7 +250,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     };
 
     const render = () => {
-        if(!canvasRef.current) return;
+        if (!canvasRef.current) return;
         const context = canvasRef.current.getContext('2d');
         draw(context);
         //ctx.drawImage(background, 0, 0);
@@ -246,7 +262,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         canvasRef.current.game = new Game();
         render();
 
-        socket.on('startGame', () => (canvasRef.current.started = true))
+        socket.on('startGame', () => (canvasRef.current.started = true));
     }, []);
 
     // When pose updates

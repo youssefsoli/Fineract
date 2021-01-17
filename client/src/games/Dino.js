@@ -4,6 +4,7 @@ import { updatePositions } from '../../src/utils';
 import { drawPoint } from './utilities';
 import useSound from 'use-sound';
 import scoreSfx from './assets/score.mp3';
+import { useHistory } from 'react-router-dom';
 import { drawKeypoints } from '../utilities';
 import keypointIndex from '../keypointIndex';
 import {
@@ -60,6 +61,7 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const cactus = useRef(null);
     const crouchdino = useRef(null);
     const [calibration, setCalibration] = useState(true);
+    const history = useHistory();
 
     class Game {
         constructor() {
@@ -92,6 +94,15 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 () => {
                     canvasRef.current.game.pause = false;
                     setNav(false);
+                },
+                false
+            );
+
+            // exit
+            document.addEventListener(
+                'exit',
+                () => {
+                    history.push('/');
                 },
                 false
             );
@@ -208,6 +219,11 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 'Tap your right shoulder with your right hand to restart',
                 game.cvs.width / 2,
                 game.cvs.height / 2 + 60
+            );
+            ctx.fillText(
+                'Tap your left shoulder with your left hand to exit',
+                game.cvs.width / 2,
+                game.cvs.height / 2 + 120
             );
             return;
         }
