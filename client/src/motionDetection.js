@@ -12,7 +12,7 @@ const isTouchingLeftShoulder = (pose) => {
             Math.pow(leftWristPos.y - leftShoulderPos.y, 2)
     );
 
-    return leftDistance < 130 && leftWristPos.y < 300;
+    return leftDistance < 160 && leftWristPos.y < 300;
 };
 
 const isTouchingRightShoulder = (pose) => {
@@ -27,8 +27,9 @@ const isTouchingRightShoulder = (pose) => {
         Math.pow(rightWristPos.x - rightShoulderPos.x, 2) +
             Math.pow(rightWristPos.y - rightShoulderPos.y, 2)
     );
+    console.log(rightDistance);
 
-    return rightDistance < 130 && rightWristPos.y < 300;
+    return rightDistance < 160 && rightWristPos.y < 300;
 };
 
 const isInAir = (pose, normalHeight = 120, peakHeight = -30, factor = 0.75) => {
