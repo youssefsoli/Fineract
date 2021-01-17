@@ -9,3 +9,33 @@ body {
     right: 5%;
     z-index: 12;
 }
+
+.banner-img {
+    position: absolute;
+    content: "";
+    width: 33%;
+    right: 16%;
+    top: 49%;
+    transform: translateY(-50%);
+}
+
+.banner-block img {
+    z-index: 999;
+    padding-top: 34%;
+    width: 90%;
+}
+
+.banner-block .animation-circle-inverse.left {
+    top: 400px;
+    left: 36%;
+}
+
+.banner-block .animation-circle-inverse {
+    position: absolute;
+    z-index: -1;
+}
+
+.banner-block .animation-circle-inverse > span {
+    width: 80px;
+    height: 80px;
+}
