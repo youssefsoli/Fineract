@@ -58,7 +58,6 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const pipeNorth = useRef(null);
     const pipeSouth = useRef(null);
     const [calibration, setCalibration] = useState(true);
-    const socket = io(window.location.origin.toString());
     const history = useHistory();
 
     class Game {
@@ -181,9 +180,10 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const draw = (ctx) => {
         const game = canvasRef.current.game;
         const pose = canvasRef.current.pose;
+        const partnerPose = canvasRef.current.partnerPose;
         if (!pose || !game) return;
 
-        if (!canvasRef.current.started) {
+        if(!canvasRef.current.started || !partnerPose) {
             ctx.textAlign = 'center';
             ctx.font = '60px Verdana';
             ctx.fillText(
@@ -234,6 +234,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         }
 
         const { x, y } = pose.keypoints[0].position;
+        const { x: partnerX, y: partnerY } = partnerPose.keypoints[0].position;
 
         game.bird = bird.current;
         game.bg = bg.current;
@@ -313,6 +314,14 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
             game.bird.height * game.yScale
         );
 
+        ctx.drawImage(
+            game.bird,
+            game.bX + 100,
+            partnerY,
+            game.bird.width * game.xScale,
+            game.bird.height * game.yScale
+        );
+
         // Draw face
         ctx.drawImage(
             webcamRef.current.video,
@@ -360,10 +369,14 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
 
     useEffect(() => {
         canvasRef.current.started = false;
+        canvasRef.current.socket = io(window.location.origin.toString());
         canvasRef.current.game = new Game();
         render();
 
-        socket.on('startGame', () => (canvasRef.current.started = true));
+        canvasRef.current.socket.on('startGame', () => (canvasRef.current.started = true));
+        canvasRef.current.socket.on('partnerPose', pose => {
+            canvasRef.current.partnerPose = pose;
+        });
     }, []);
 
     // When pose updates
@@ -373,7 +386,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         if (calibration) {
             calibrationRender();
         } else {
-            socket.emit('pose', pose);
+            canvasRef.current.socket.emit('pose', pose);
 
             let eventName;
             if (canvasRef.current.game.over && isTouchingRightShoulder(pose)) {
@@ -434,6 +447,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 className="hidden"
                 alt=""
             />
+            <iframe ref={azureFrame} title="a" style={{zIndex: 30, position: 'absolute', right: 30, top: 20}} src="https://gitvideocall.azurewebsites.net/?groupId=1bcc5dd0-58c2-11eb-8ca9-337a2b67a3ce"></iframe>
         </>
     );
 };
