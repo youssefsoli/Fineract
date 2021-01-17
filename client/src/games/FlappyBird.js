@@ -10,12 +10,16 @@ import {
     isTouchingRightShoulder,
 } from '../../src/motionDetection';
 
-const drawPosition = (xCoor, yCoor, ctx, name, keypoints) => {
-    // Radii of the white glow.
-    let innerRadius = 10,
-        outerRadius = 130,
-        // Radius of the entire circle.
-        radius = 120;
+const drawPosition = (
+    xCoor,
+    yCoor,
+    ctx,
+    name,
+    keypoints,
+    innerRadius,
+    outerRadius,
+    radius
+) => {
     let grd = ctx.createRadialGradient(
         xCoor,
         yCoor,
@@ -144,10 +148,25 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         // draw video
         ctx.drawImage(webcamRef.current.video, 0, 0, x, y);
 
+        // Radii of the white glow.
+        let innerRadius = 10 * canvasRef.current.game.xScale,
+            outerRadius = 130 * canvasRef.current.game.xScale,
+            // Radius of the entire circle.
+            radius = 120 * canvasRef.current.game.xScale;
+
         let numValid = 0;
         // left wrist
         if (
-            drawPosition(9 * (x / 11), 7 * (y / 8), ctx, 'leftWrist', keypoints)
+            drawPosition(
+                9 * (x / 11),
+                7 * (y / 8),
+                ctx,
+                'leftWrist',
+                keypoints,
+                innerRadius,
+                outerRadius,
+                radius
+            )
         ) {
             numValid++;
         }
@@ -159,19 +178,44 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 7 * (y / 8),
                 ctx,
                 'rightWrist',
-                keypoints
+                keypoints,
+                innerRadius,
+                outerRadius,
+                radius
             )
         ) {
             numValid++;
         }
 
         // left shoulder
-        if (drawPosition(2 * (x / 3), y / 8, ctx, 'leftShoulder', keypoints)) {
+        if (
+            drawPosition(
+                2 * (x / 3),
+                y / 8,
+                ctx,
+                'leftShoulder',
+                keypoints,
+                innerRadius,
+                outerRadius,
+                radius
+            )
+        ) {
             numValid++;
         }
 
         // right shoulder
-        if (drawPosition(x / 3, y / 8, ctx, 'rightShoulder', keypoints)) {
+        if (
+            drawPosition(
+                x / 3,
+                y / 8,
+                ctx,
+                'rightShoulder',
+                keypoints,
+                innerRadius,
+                outerRadius,
+                radius
+            )
+        ) {
             numValid++;
         }
 
@@ -184,7 +228,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         const partnerPose = canvasRef.current.partnerPose;
         if (!pose || !game) return;
 
-        if(!canvasRef.current.started || !partnerPose) {
+        if (!canvasRef.current.started || !partnerPose) {
             ctx.textAlign = 'center';
             ctx.font = '60px Verdana';
             ctx.fillText(
@@ -374,8 +418,11 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         canvasRef.current.game = new Game();
         render();
 
-        canvasRef.current.socket.on('startGame', () => (canvasRef.current.started = true));
-        canvasRef.current.socket.on('partnerPose', pose => {
+        canvasRef.current.socket.on(
+            'startGame',
+            () => (canvasRef.current.started = true)
+        );
+        canvasRef.current.socket.on('partnerPose', (pose) => {
             canvasRef.current.partnerPose = pose;
         });
     }, []);
@@ -448,13 +495,21 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 className="hidden"
                 alt=""
             />
-            <iframe
-                ref={azureFrame}
-                title="a"
-                style={{zIndex: 30, position: 'absolute', right: 30, top: 20, borderStyle: 'none'}}
-                allow="camera;microphone"
-                src="https://gitvideocall.azurewebsites.net/?groupId=1bcc5dd0-58c2-11eb-8ca9-337a2b67a3ce">
-                </iframe>
+            {!calibration && (
+                <iframe
+                    ref={azureFrame}
+                    title="a"
+                    style={{
+                        zIndex: 30,
+                        position: 'absolute',
+                        right: 30,
+                        top: 20,
+                        borderStyle: 'none',
+                    }}
+                    allow="camera;microphone"
+                    src="https://gitvideocall.azurewebsites.net/?groupId=1bcc5dd0-58c2-11eb-8ca9-337a2b67a3ce"
+                ></iframe>
+            )}
         </>
     );
 };
