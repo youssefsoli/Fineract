@@ -47,7 +47,8 @@ function App() {
     runPosenet();
 
     return (
-        <div className="App">   
+        <div className="app">
+            <div className="html">
             <Navbar/>
             
             <header className="nav_area">
@@ -66,6 +67,7 @@ function App() {
                 </div>
                 </div> */}
             {/* Preloader End */}
+            </header>
 
             <section id="banner" className="banner">
                 <div className="container">
@@ -132,8 +134,8 @@ function App() {
 
                 <About />
                 <Footer />
-
-
+            </div>
+            <div className="Webcam">
                 <Webcam
                     ref={webcamRef}
                     style={{
@@ -163,8 +165,8 @@ function App() {
                         height: 480,
                     }}
                 />
-            </header>
-        </div>
+            </div>
+        </div>   
     );
 }
 
