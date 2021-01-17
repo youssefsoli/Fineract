@@ -52,7 +52,7 @@ const drawPosition = (xCoor, yCoor, ctx, name, keypoints) => {
     return color === '#a0ff2b';
 };
 
-const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
+const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const [playScore] = useSound(scoreSfx);
     const bird = useRef(null);
     const bg = useRef(null);
@@ -65,10 +65,33 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         constructor() {
             this.cvs = canvasRef.current;
 
+            setNav(false);
+
+            //restart
             document.addEventListener(
                 'restart',
                 () => {
                     canvasRef.current.game = new Game();
+                },
+                false
+            );
+
+            // pause
+            document.addEventListener(
+                'pause',
+                () => {
+                    canvasRef.current.game.pause = true;
+                    setNav(true);
+                },
+                false
+            );
+
+            // resume
+            document.addEventListener(
+                'resume',
+                () => {
+                    canvasRef.current.game.pause = false;
+                    setNav(false);
                 },
                 false
             );
@@ -87,6 +110,7 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
             this.dinoYBase = canvasRef.current.height - 450;
             this.dinoMaxHeight = canvasRef.current.height * 0.5;
             this.cablibrationMode = true;
+            this.pause = false;
 
             this.bodyPositions = {
                 count: 0,
@@ -167,6 +191,44 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         const game = canvasRef.current.game;
         const pose = canvasRef.current.pose;
         if (!pose || !game) return;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, game.cvs.width, game.cvs.height);
+        if (game.over) {
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#000';
+            ctx.font = '60px Verdana';
+
+            ctx.fillText(
+                'Score : ' + game.score,
+                game.cvs.width / 2,
+                game.cvs.height / 2
+            );
+
+            ctx.font = '30px Verdana';
+            ctx.fillText(
+                'Tap your right shoulder with your right hand to restart',
+                game.cvs.width / 2,
+                game.cvs.height / 2 + 60
+            );
+            return;
+        }
+
+        if (game.pause) {
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#000';
+            ctx.font = '60px Verdana';
+            ctx.fillText('Paused', game.cvs.width / 2, game.cvs.height / 2);
+
+            ctx.font = '30px Verdana';
+            ctx.fillText(
+                'Tap your right shoulder with your right hand to resume',
+                game.cvs.width / 2,
+                game.cvs.height / 2 + 60
+            );
+            return;
+        }
+
         ctx.fillStyle = '#000000';
 
         game.tick += 1;
@@ -194,28 +256,6 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         const crouchingDinoHeight = crouchingDinoWidth * (65 / 134);
 
         drawPoint(ctx, game.bodyPositions.leftHip.avg, 20, 5, 'red');
-
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, game.cvs.width, game.cvs.height);
-        if (game.over) {
-            ctx.textAlign = 'center';
-            ctx.fillStyle = '#000';
-            ctx.font = '60px Verdana';
-
-            ctx.fillText(
-                'Score : ' + game.score,
-                game.cvs.width / 2,
-                game.cvs.height / 2
-            );
-
-            ctx.font = '30px Verdana';
-            ctx.fillText(
-                'Tap your right shoulder with your right hand to restart',
-                game.cvs.width / 2,
-                game.cvs.height / 2 + 60
-            );
-            return;
-        }
 
         if (game.tick > 40 && game.bodyPositions.count < 100) {
             updatePositions(pose, game.bodyPositions);
@@ -256,6 +296,7 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
 
         if (collision) {
             game.over = true;
+            setNav(true);
         }
 
         game.dinoYBase = canvasRef.current.height - 450;
