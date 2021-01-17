@@ -11,7 +11,6 @@ import Game from './game';
 import Navbar from './navbar';
 import About from './about';
 import Footer from './footer';
-import DinoCalibrate from './calibrate/DinoCalibrate';
 
 function App() {
     const webcamRef = useRef(null);
@@ -19,7 +18,7 @@ function App() {
     const net = useNet({
         architecture: 'MobileNetV1',
         outputStride: 16,
-        inputResolution: { width: 640, height: 480 },
+        inputResolution: { width: 160, height: 120 },
         multiplier: 0.5,
         imageScaleFactor: 0.3,
     });
@@ -153,6 +152,7 @@ function App() {
                                             title="Thighs"
                                             description="Jump Duck but dont roll!"
                                             icon="flaticon-icon-135439"
+                                            link="/dino"
                                         />
                                         <Game
                                             title="General Workout Routines"
@@ -260,12 +260,12 @@ function App() {
                                     right: 0,
                                     textAlign: 'center',
                                     zIndex: 9,
-                                    width: 'auto',
+                                    width: '100%',
                                     height: '100%',
                                 }}
                             />
                             {canvasRef.current && (
-                                <DinoCalibrate
+                                <Dino
                                     pose={pose}
                                     canvasRef={canvasRef}
                                     webcamRef={webcamRef}

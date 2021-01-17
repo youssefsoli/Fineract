@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { drawKeypoints } from './utilities';
+import { drawKeypoints } from '../utilities';
 import keypointIndex from '../keypointIndex';
 // TODO: make (is in pushup position) function
 
