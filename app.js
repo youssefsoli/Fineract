@@ -23,19 +23,21 @@ io.on('connection', (socket) => {
         if(lastSocket) {
             socket.partner = lastSocket;
             lastSocket.partner = socket;
-            lastSocket = false;
             socket.emit('startGame');
+            lastSocket.emit('startGame');
+            lastSocket = false;
         }
         else
             lastSocket = socket;
       socket.emit('waiting');
     });
 
-    socket.on('pose', msg => {
-        socket.partner.emit('partnerPose', msg.pose);
+    socket.on('pose', pose => {
+        if(socket.partner)
+            socket.partner.emit('partnerPose', pose);
     })
 });
 
-app.listen(port, () => {
+http.listen(port, () => {
     console.log(`Listening on port: ${port}`);
 });
