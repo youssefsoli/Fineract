@@ -313,7 +313,6 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         );
 
         if (game.dinoState === 'jumping') {
-            console.log('jumping actions');
             game.upwards += 0.8;
         } else if (jumping) {
             game.upwards = -28;
@@ -329,7 +328,6 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 }
             }
         } else if (crouching) {
-            console.log('crouching');
             game.dinoState = 'crouching';
         }
 
@@ -429,7 +427,6 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         const context = canvasRef.current.getContext('2d');
         if (calibrationDraw(context, canvasRef.current.pose.keypoints)) {
             setCalibration(false);
-            console.log('done');
             return;
         }
         drawKeypoints(canvasRef.current.pose.keypoints, 0.6, context);
