@@ -213,7 +213,7 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
 
             game.obstacles[i].x -= game.speed;
 
-            if (game.obstacles[i].x > 0 && game.obstacles[i].x < game.speed - 1) {
+            if (game.obstacles[i].x >= 0 && game.obstacles[i].x < game.speed - 1) {
                 game.score += 1;
                 playScore();
             }
