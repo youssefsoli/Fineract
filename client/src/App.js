@@ -93,7 +93,7 @@ function App() {
                         height: '100%',
                     }}
                 />
-                {canvasRef.current && <Dino pose={pose} canvasRef={canvasRef} />}
+                {canvasRef.current && <Dino pose={pose} canvasRef={canvasRef} webcamRef={webcamRef}/>}
         </div>
     );
 }

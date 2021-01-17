@@ -32,20 +32,41 @@ const isTouchingRightShoulder = (pose) => {
 };
 
 const isInAir = (pose, bodyPositions, screenHeight) => {
-    const measuredPositions = ["leftShoulder", "rightShoulder", "leftHip", "rightHip", "leftKnee", "rightKnee"]
+    // const measuredPositions = ["leftShoulder", "rightShoulder", "leftHip", "rightHip", "leftKnee", "rightKnee"]
+    const measuredPositions = ["leftHip", "rightHip"]
 
     let diffSum = 0
     let count = 0
+    let partsUsed = []
 
     for (let i = 0; i < pose.keypoints.length; i++) {
         let keypoint = pose.keypoints[i]
         let bodypart = keypoint.part
 
         if (measuredPositions.indexOf(bodypart) > -1 && keypoint.score > 0.6) {
-            let diff = Math.max(0, keypoint.position.y - bodyPositions[bodypart].avg)
-            diffSum += diff
-            count += 1
+            let diff = Math.max(0, bodyPositions[bodypart].avg - keypoint.position.y)
+
+            if (diff > 0) {
+                partsUsed.push({part: bodypart, diff: diff})
+                diffSum += diff
+                count += 1
+            }
         }
+    }
+
+    const jumping = (diffSum / count) > screenHeight * 0.1
+
+    if (jumping) {
+        console.log("decided to jump")
+        console.log(bodyPositions)
+        console.log(partsUsed)
+    }
+
+    if(diffSum > 0) {
+        console.log("diffs")
+        console.log(diffSum)
+        console.log(count)
+        console.log(partsUsed)
     }
 
 
@@ -56,7 +77,7 @@ const isInAir = (pose, bodyPositions, screenHeight) => {
 
     // return averageHipHeight - normalHeight > verticalDistance * factor;
 
-    return (diffSum / count) > screenHeight * 0.1
+    return jumping
 };
 
 const isCrouching = (
@@ -81,12 +102,12 @@ const isCrouching = (
         let bodypart = keypoint.part
 
         if (measuredPositions.indexOf(bodypart) > -1 && keypoint.score > 0.6) {
-            let diff = Math.max(bodyPositions[bodypart].avg - keypoint.position.y, 0)
+            let diff = Math.max(keypoint.position.y - bodyPositions[bodypart].avg, 0)
             diffSum += diff
             count += 1
         }
     }
-    return (diffSum / count) > screenHeight * 0.2
+    return (diffSum / count) > screenHeight * 0.4
 };
 
 export {
