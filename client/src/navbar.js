@@ -1,27 +1,62 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
+import HamburgerMenu from 'react-hamburger-menu';
 
-const Navbar = () => {
-    return (
-        <header className="nav_area">
-            <div className="container">
-                <div className="logo_container">
-                    <a href="index.html"><img src="images/logo.png" className="img-fluid" alt="logo" /></a>
-                </div>
-                <label className="toggle-btn toggle-btn__cross" for="toggle">
-                    <span className="bar"></span>
-                    <span className="bar"></span>
-                    <span className="bar"></span>
-                    <span className="bar"></span>
-                </label>
-                <nav>
-                    <ul>
-                        <li><a href="#banner">Home</a></li>
-                    </ul>
-                </nav>
-         </div>
-        </header>
-    )
+class NavBar extends Component {
+    constructor(){
+        super()
+        this.state = {
+            open: false,
+            hideOrShowHambugerDropDown: 'nav'
+        }
+    }
+
+    handleClick = () => {
+        this.setState({open: !this.state.open});
+    }
+
+    displayHamburgerMenu = () => {
+        return (
+            <HamburgerMenu
+                    isOpen={this.state.open}
+                    menuClicked={this.handleClick.bind(this)}
+                    width={18}
+                    height={15}
+                    strokeWidth={1}
+                    rotate={0}
+                    color='white'
+                    borderRadius={0}
+                    animationDuration={0.5}
+                />
+        )
+    }
+
+    displayNavBar = () => {
+        return (
+            <ul className='nav'>
+                    <li className='nav-link'><NavLink to='/' >Home</NavLink></li>
+                    <li className='nav-link'><NavLink to='/flappy'>Flappy Bird</NavLink></li>
+                </ul>
+        )
+    }
+
+    displayMobileMenu = () => {
+        return (
+            <ul className='hamburgerDropDown'>
+                    <li className='nav-link'><NavLink to='/' >Home</NavLink></li>
+                    <li className='nav-link'><NavLink to='/flappy'>Flappy Bird</NavLink></li>
+                </ul>
+        )
+    }
+
+    render() {
+        return (
+            <div className='navbar'>
+                { this.state.open ?  this.displayMobileMenu() : null}
+                {window.innerWidth > 1200 ? this.displayNavBar() : this.displayHamburgerMenu()}
+            </div>
+        );
+    }
 }
 
-export default Navbar;
-
+export default NavBar;

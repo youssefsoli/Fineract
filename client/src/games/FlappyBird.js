@@ -217,6 +217,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
     };
 
     const render = () => {
+        if(!canvasRef.current) return;
         const context = canvasRef.current.getContext('2d');
         draw(context);
         //ctx.drawImage(background, 0, 0);
