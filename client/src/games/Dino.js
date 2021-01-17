@@ -15,16 +15,22 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         constructor() {
             this.cvs = canvasRef.current;
 
+            document.addEventListener("keypress", (e) => {
+                if(canvasRef.current.game.over && e.key === ' ')
+                    canvasRef.current.game = new Game();
+            }, false);
+
             // some variables
             this.constant = 0;
+            this.over = false
             this.upwards = 0
             this.speed = 5;
             this.bX = 10;
             this.score = 0;
             this.dinoState = 'ground';
             this.lastGround = 10
-            this.dinoY = canvasRef.current.height - 300
-            this.dinoYBase = canvasRef.current.height - 300
+            this.dinoY = canvasRef.current.height - 450
+            this.dinoYBase = canvasRef.current.height - 450
             this.dinoMaxHeight = canvasRef.current.height * 0.5
 
             this.bodyPositions = {
@@ -72,11 +78,77 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         if (!pose || !game) return;
         ctx.fillStyle = '#000000';
 
+        game.bird = bird.current;
+        game.bg = bg.current;
+        game.dino = dino.current;
+        game.cactus = cactus.current;
+
+        const cvWidth = canvasRef.current.width;
+        const cvHeight = canvasRef.current.height;
+
+        const cactusHeight = cvHeight * 0.2;
+        // const cactusWidth = (cactusHeight * 309) / 533;
+        const cactusWidth = cactusHeight
+
+        const birdHeight = cvHeight * 0.15;
+        const birdWidth = birdHeight * 1.75;
+
+        const dinoHeight = 400;
+        const dinoWidth = 400;
+
+        const crouchingDinoHeight = 200;
+        const crouchingDinoWidth = 200;
+
+        if(game.over) {
+            ctx.textAlign = "center";
+            ctx.fillStyle = '#000';
+            ctx.font = '60px Verdana';
+            ctx.fillText('Score : ' + game.score, game.cvs.width/2, game.cvs.height/2);
+
+            ctx.font = '30px Verdana';
+            ctx.fillText('Press Space to restart', game.cvs.width/2, game.cvs.height/2 + 60);
+            return;
+        }
+
         if (game.bodyPositions.count < 100) {
             updatePositions(pose, game.bodyPositions)
         }
 
-        game.dinoYBase = canvasRef.current.height - 300
+        // check collisions
+        let collision = false
+
+        const dinoTop = game.dinoY
+        const dinoBottom = game.dinoY + dinoHeight
+        const dinoX = dinoWidth
+        for (let i = 0; i < game.obstacles.length; i++) {
+            let obstacle = game.obstacles[i]
+
+            if (obstacle.type === "cactus") {
+                const front = obstacle.x
+                const back = obstacle.x + cactusWidth
+                const top = obstacle.y
+                const bottom = obstacle.y + cactusHeight
+                
+                if (front < dinoX && back > dinoX && dinoBottom > top) {
+                    collision = true
+                }
+            } else {
+                const front = obstacle.x
+                const back = obstacle.x + birdWidth
+                const top = obstacle.y
+                const bottom = obstacle.y + birdHeight
+                
+                if (front < dinoX && back > dinoX && dinoTop < bottom) {
+                    collision = true
+                }
+            }
+        }
+
+        if (collision) {
+            // game.over = true
+        }
+
+        game.dinoYBase = canvasRef.current.height - 450
 
         if (game.dinoState === 'jumping') {
             console.log("jumping actions")
@@ -95,25 +167,8 @@ const Dino = ({ pose, canvasRef, ...props }) => {
             }
         }
 
-        game.bird = bird.current;
-        game.bg = bg.current;
-        game.dino = dino.current;
-        game.cactus = cactus.current;
+        ctx.drawImage(game.bg, 0, 0, window.innerWidth, window.innerHeight);
 
-        const cvWidth = canvasRef.current.width;
-        const cvHeight = canvasRef.current.height;
-
-        const cactusHeight = cvHeight * 0.2;
-        // const cactusWidth = (cactusHeight * 309) / 533;
-        const cactusWidth = cactusHeight
-
-        const birdHeight = cvHeight * 0.15;
-        const birdWidth = birdHeight * 1.75;
-
-        const dinoHeight = 300;
-        const dinoWidth = 300;
-
-        // ctx.drawImage(game.bg, 0, 0);
         let max_x = 0;
         for (let i = game.obstacles.length - 1; i >= 0; i--) {
             if (game.obstacles[i].type === 'cactus') {
@@ -161,7 +216,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
                 const obsType = Math.random() < 0.7 ? 'cactus' : 'bird';
                 game.obstacles.push({
                     x: cvWidth,
-                    y: obsType === 'cactus'? cvHeight - cactusHeight : cvHeight * 0.5,
+                    y: obsType === 'cactus'? cvHeight - cactusHeight : cvHeight * 0.6,
                     type: obsType,
                 });
             }
@@ -170,7 +225,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         // ctx.drawImage(fg, 0, cvs.height - fg.height);
 
         if (game.bodyPositions.count < 100) {
-            game.dinoY = canvasRef.current.height - 300
+            game.dinoY = canvasRef.current.height - dinoHeight - 50
         } else {
             const newDinoHeight = game.dinoY + game.upwards
             if (newDinoHeight > game.dinoYBase) {
@@ -209,7 +264,6 @@ const Dino = ({ pose, canvasRef, ...props }) => {
     const render = () => {
         const context = canvasRef.current.getContext('2d');
         draw(context);
-        //ctx.drawImage(background, 0, 0);
         requestAnimationFrame(render);
     };
 
@@ -227,7 +281,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         <>
             <img
                 ref={bird}
-                src="assets/purple bird.png"
+                src="assets/dinobird2.png"
                 style={{ display: 'none' }}
                 className="hidden"
                 alt=""
@@ -248,7 +302,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
             />
             <img
                 ref={dino}
-                src="assets/dino.png"
+                src="assets/unnamed-removebg-preview.png"
                 style={{ display: 'none' }}
                 className="hidden"
                 alt=""
