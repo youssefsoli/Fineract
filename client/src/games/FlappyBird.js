@@ -28,25 +28,29 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
             // );
 
             // game over
-            document.addEventListener('over', () => { 
-                const game = canvasRef.current.game;
-                const ctx = canvasRef.current.getContext('2d');
-                ctx.textAlign = 'center';
-                ctx.fillStyle = '#000';
-                ctx.font = '60px Verdana';
-                ctx.fillText(
-                    'Score : ' + game.score,
-                    game.cvs.width / 2,
-                    game.cvs.height / 2
-                );
+            document.addEventListener(
+                'over',
+                () => {
+                    const game = canvasRef.current.game;
+                    const ctx = canvasRef.current.getContext('2d');
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = '#000';
+                    ctx.font = '60px Verdana';
+                    ctx.fillText(
+                        'Score : ' + game.score,
+                        game.cvs.width / 2,
+                        game.cvs.height / 2
+                    );
 
-                ctx.font = '30px Verdana';
-                ctx.fillText(
-                    'Tap your right shoulder with your right hand to restart',
-                    game.cvs.width / 2,
-                    game.cvs.height / 2 + 60
-                );
-            }, false);
+                    ctx.font = '30px Verdana';
+                    ctx.fillText(
+                        'Tap your right shoulder with your right hand to restart',
+                        game.cvs.width / 2,
+                        game.cvs.height / 2 + 60
+                    );
+                },
+                false
+            );
 
             // restart
             document.addEventListener(
@@ -248,7 +252,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
     }, []);
 
     // When pose updates
-    useEffect(() => { 
+    useEffect(() => {
         canvasRef.current.pose = pose;
 
         let eventName;
