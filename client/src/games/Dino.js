@@ -16,7 +16,7 @@ const drawPosition = (xCoor, yCoor, ctx, name, keypoints) => {
     let innerRadius = 5,
         outerRadius = 70,
         // Radius of the entire circle.
-        radius = 60;
+        radius = 120;
     let grd = ctx.createRadialGradient(
         xCoor,
         yCoor,
