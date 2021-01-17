@@ -332,7 +332,7 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
             setNav(true);
         }
 
-        game.dinoYBase = canvasRef.current.height - 450;
+        game.dinoYBase = canvasRef.current.height - canvasRef.current.height * 0.3 - 50;
 
         const jumping = isInAir(
             pose,
