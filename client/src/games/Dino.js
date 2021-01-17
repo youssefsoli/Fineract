@@ -16,10 +16,14 @@ const Dino = ({ pose, canvasRef, ...props }) => {
 
             // some variables
             this.constant = 0;
+            this.upwards = 0
             this.speed = 5;
             this.bX = 10;
             this.score = 0;
             this.dinoState = 'ground';
+            this.dinoY = canvasRef.current.height - 300
+            this.dinoYBase = canvasRef.current.height - 300
+            this.dinoMaxHeight = canvasRef.current.height * 0.5
 
             // pipe coordinates
             this.obstacles = [];
@@ -32,13 +36,22 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         if (!pose || !game) return;
         ctx.fillStyle = '#000000';
 
-        if (isInAir(pose) && game.dinoState === 'ground') {
-            game.dinoState = 'jumping';
-            // jump stuff
-        }
-        if (isCrouching(pose) && game.dinoState === 'ground') {
-            game.dinoState = 'crouching';
-            // crouch stuff
+        if (game.dinoState === 'jumping') {
+            game.upwards -= 2
+        } else if (game.dinoState === 'crouching') {
+
+        } else {
+            if (isInAir(pose)) {
+                game.upwards = 50
+                console.log("jumping")
+                game.dinoState = 'jumping';
+                // jump stuff
+            }
+            if (isCrouching(pose)) {
+                game.dinoState = 'crouching';
+                console.log('crouching')
+                // crouch stuff
+            }
         }
 
         game.bird = bird.current;
@@ -114,11 +127,19 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         }
 
         // ctx.drawImage(fg, 0, cvs.height - fg.height);
+        const newDinoHeight = game.dinoY + game.upwards
+        if (newDinoHeight < game.dinoYBase) {
+            game.dinoY = game.dinoYBase
+            game.upwards = 0
+            game.dinoState = 'ground'
+        } else {
+            game.dinoY = newDinoHeight
+        }
 
         ctx.drawImage(
             dino.current,
             game.bX,
-            cvHeight - dinoHeight,
+            game.dinoY,
             dinoHeight,
             dinoWidth
         );
@@ -129,6 +150,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
     };
 
     const render = () => {
+        console.log("starting up")
         const context = canvasRef.current.getContext('2d');
         draw(context);
         //ctx.drawImage(background, 0, 0);
