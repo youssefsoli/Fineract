@@ -394,6 +394,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         const context = canvasRef.current.getContext('2d');
         if (calibrationDraw(context, canvasRef.current.pose.keypoints)) {
             setCalibration(false);
+            canvasRef.current.socket.emit('calibrated');
             return;
         }
         drawKeypoints(canvasRef.current.pose.keypoints, 0.6, context, [
@@ -418,10 +419,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         canvasRef.current.game = new Game();
         render();
 
-        canvasRef.current.socket.on(
-            'startGame',
-            () => (canvasRef.current.started = true)
-        );
+        canvasRef.current.socket.on('startGame', () => (canvasRef.current.started = true));
         canvasRef.current.socket.on('partnerPose', (pose) => {
             canvasRef.current.partnerPose = pose;
         });

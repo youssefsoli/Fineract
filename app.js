@@ -15,29 +15,29 @@ app.use('/api', router);
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-const rooms = [{id: Math.floor(Math.random() * 8999 + 1000), users: 0}];
+const rooms = [{id: Math.floor(Math.random() * 8999 + 1000), users: []}];
 
 io.on('connection', async socket => {
     console.log(socket.id);
 
     if(!socket.room) {
         for(room of rooms) {
-            if(room.users < 2) {
+            if(room.users.length < 2) {
                 socket.room = room;
-                room.users++;
+                room.users.push(socket);
                 socket.join(socket.room.id);
                 break;
             }
         }
 
         if(!socket.room) {
-            const room = {id: Math.floor(Math.random() * 8999 + 1000), users: 1};
+            const room = {id: Math.floor(Math.random() * 8999 + 1000), users: [socket]};
             rooms.push(room);
             socket.room = room;
             socket.join(socket.room.id);
         }
 
-        if(socket.room.users == 2)
+        if(socket.room.users.length === 2 && socket.room.users.every(sock => sock.calibrated))
             io.in(socket.room.id).emit('startGame');
     }
 
@@ -45,8 +45,17 @@ io.on('connection', async socket => {
         socket.broadcast.emit('partnerPose', pose);
     });
 
+    socket.on('calibrated', () => {
+        socket.calibrated = true;
+        if(socket.room.users.length === 2 && socket.room.users.every(sock => sock.calibrated))
+            io.in(socket.room.id).emit('startGame');
+    });
+
     socket.on('disconnecting', () => {
-        socket.room.users--;
+        for(let i = 0; i < socket.room.users.length; i++) {
+            if(socket.room.users[i].id === socket.id)
+                socket.room.users.splice(i, 1);
+        }
     });
 
     console.log(rooms);
