@@ -67,7 +67,7 @@ function App() {
     };
 
     return (
-        <div className="app">
+        <div className="parent">
             <div className="html">
             <Navbar/>
             
@@ -155,19 +155,19 @@ function App() {
                 <About />
                 <Footer />
             </div>
-            <div className="Webcam">
+            <div className="App">
                 <Webcam
                     ref={webcamRef}
                     style={{
                         position: 'absolute',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
+                        marginLeft: '0',
+                        marginRight: '0',
                         left: 0,
                         right: 0,
                         textAlign: 'center',
-                        zindex: 9,
-                        width: 640,
-                        height: 480,
+                        zIndex: 8,
+                        width: 'auto',
+                        height: '10%',
                     }}
                 />
 
@@ -180,47 +180,17 @@ function App() {
                         left: 0,
                         right: 0,
                         textAlign: 'center',
-                        zindex: 9,
-                        width: 640,
-                        height: 480,
+                        zIndex: 9,
+                        width: '100%',
+                        height: '100%',
                     }}
                 />
+                {canvasRef.current && (
+                    <FlappyBird pose={pose} canvasRef={canvasRef} webcamRef={webcamRef} />
+                )}
             </div>
         </div>   
-        <div className="App">
-            <Webcam
-                ref={webcamRef}
-                style={{
-                    position: 'absolute',
-                    marginLeft: '0',
-                    marginRight: '0',
-                    left: 0,
-                    right: 0,
-                    textAlign: 'center',
-                    zIndex: 8,
-                    width: 'auto',
-                    height: '10%',
-                }}
-            />
-
-            <canvas
-                ref={canvasRef}
-                style={{
-                    position: 'absolute',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    left: 0,
-                    right: 0,
-                    textAlign: 'center',
-                    zIndex: 9,
-                    width: '100%',
-                    height: '100%',
-                }}
-            />
-            {canvasRef.current && (
-                <FlappyBird pose={pose} canvasRef={canvasRef} webcamRef={webcamRef} />
-            )}
-        </div>
+        
     );
 }
 
