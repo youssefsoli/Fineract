@@ -193,27 +193,9 @@ body {
     animation: circleWater 3s linear infinite;
 }
 
-/* Banner End */
-
-/* Hambuger Menu Dropdown */
-
-/* The ul styling */
-.hamburgerDropDown {
+.menu {
     position: fixed;
-    left: 40px;
-    top: 40px;
-    width: 300px;
-    background-color: black;
-    border: 1px solid bisque;
-  }
-  
-  ul.hamburgerDropDown {
-    padding: 10px;
-  }
-  
-  /* Position of the hamburger symbol */
-  .navbar div {
-    right: -140px;
-    position: relative;
-    display: inline-block;
-  }
+    right: 10%;
+}
+
+/* Banner End */

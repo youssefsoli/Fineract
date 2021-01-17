@@ -1,62 +1,66 @@
-import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
-import HamburgerMenu from 'react-hamburger-menu';
+import React, { useState } from 'react';
+import { NavLink, useHistory } from 'react-router-dom';
+import {
+    FloatingMenu,
+    MainButton,
+    ChildButton,
+} from 'react-floating-button-menu';
+import MdAdd from '@material-ui/icons/Add';
+import MdClose from '@material-ui/icons/Clear';
+import MdFavorite from '@material-ui/icons/Favorite';
+import { mdiBird } from '@mdi/js';
+import Icon from '@mdi/react'
 
-class NavBar extends Component {
-    constructor(){
-        super()
-        this.state = {
-            open: false,
-            hideOrShowHambugerDropDown: 'nav'
-        }
-    }
+const NavBar = () => {
+    const [isOpen, setOpen] = useState(false);
+    const history = useHistory();
 
-    handleClick = () => {
-        this.setState({open: !this.state.open});
-    }
-
-    displayHamburgerMenu = () => {
-        return (
-            <HamburgerMenu
-                    isOpen={this.state.open}
-                    menuClicked={this.handleClick.bind(this)}
-                    width={18}
-                    height={15}
-                    strokeWidth={1}
-                    rotate={0}
-                    color='white'
-                    borderRadius={0}
-                    animationDuration={0.5}
+    return (
+        <div>
+            <FloatingMenu
+                slideSpeed={500}
+                direction="down"
+                spacing={8}
+                isOpen={isOpen}
+                className="menu"
+            >
+                <MainButton
+                    iconResting={
+                        <MdAdd style={{ fontSize: 20 }} nativeColor="white" />
+                    }
+                    iconActive={
+                        <MdClose style={{ fontSize: 20 }} nativeColor="white" />
+                    }
+                    backgroundColor="black"
+                    onClick={() =>
+                        setOpen(!isOpen)
+                    }
+                    size={56}
                 />
-        )
-    }
-
-    displayNavBar = () => {
-        return (
-            <ul className='nav'>
-                    <li className='nav-link'><NavLink to='/' >Home</NavLink></li>
-                    <li className='nav-link'><NavLink to='/flappy'>Flappy Bird</NavLink></li>
-                </ul>
-        )
-    }
-
-    displayMobileMenu = () => {
-        return (
-            <ul className='hamburgerDropDown'>
-                    <li className='nav-link'><NavLink to='/' >Home</NavLink></li>
-                    <li className='nav-link'><NavLink to='/flappy'>Flappy Bird</NavLink></li>
-                </ul>
-        )
-    }
-
-    render() {
-        return (
-            <div className='navbar'>
-                { this.state.open ?  this.displayMobileMenu() : null}
-                {window.innerWidth > 1200 ? this.displayNavBar() : this.displayHamburgerMenu()}
-            </div>
-        );
-    }
-}
+                <ChildButton
+                    icon={
+                        <MdFavorite
+                        style={{ fontSize: 20 }}
+                        nativeColor="black"
+                    />
+                    }
+                    backgroundColor="white"
+                    size={40}
+                    onClick={() => history.push('/')}
+                />
+                <ChildButton
+                    icon={
+                        <Icon path={mdiBird}
+                        size={1}
+                        color="black"/>
+                    }
+                    backgroundColor="white"
+                    size={40}
+                    onClick={() => history.push('/flappy')}
+                />
+            </FloatingMenu>
+        </div>
+    );
+};
 
 export default NavBar;
