@@ -14,8 +14,8 @@ import {
 
 const drawPosition = (xCoor, yCoor, ctx, name, keypoints) => {
     // Radii of the white glow.
-    let innerRadius = 5,
-        outerRadius = 70,
+    let innerRadius = 10,
+        outerRadius = 130,
         // Radius of the entire circle.
         radius = 120;
     let grd = ctx.createRadialGradient(
@@ -116,8 +116,10 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
             this.score = 0;
             this.dinoState = 'ground';
             this.crouchLeft = 10;
-            this.dinoY = canvasRef.current.height - canvasRef.current.height * 0.3 - 50;
-            this.dinoYBase = canvasRef.current.height - canvasRef.current.height * 0.3 - 50;
+            this.dinoY =
+                canvasRef.current.height - canvasRef.current.height * 0.3 - 50;
+            this.dinoYBase =
+                canvasRef.current.height - canvasRef.current.height * 0.3 - 50;
             this.cablibrationMode = true;
             this.pause = false;
 
@@ -460,7 +462,12 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
             setCalibration(false);
             return;
         }
-        drawKeypoints(canvasRef.current.pose.keypoints, 0.6, context);
+        drawKeypoints(canvasRef.current.pose.keypoints, 0.6, context, [
+            'leftShoulder',
+            'rightShoulder',
+            'leftHip',
+            'rightHip',
+        ]);
         requestAnimationFrame(calibrationRender);
     };
 

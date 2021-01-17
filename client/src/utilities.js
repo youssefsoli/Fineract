@@ -5,11 +5,10 @@ export function drawPoint(ctx, y, x, r, color) {
     ctx.fill();
 }
 
-export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
+export function drawKeypoints(keypoints, minConfidence, ctx, parts, scale = 1) {
     if (!keypoints) return;
     for (let i = 0; i < keypoints.length; i++) {
         const keypoint = keypoints[i];
-        const parts = ['leftShoulder', 'rightShoulder', 'leftHip', 'rightHip'];
         if (!parts.includes(keypoint.part)) continue;
 
         if (keypoint.score < minConfidence) {
