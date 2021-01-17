@@ -15,27 +15,41 @@ app.use('/api', router);
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-let lastSocket = false;
+const rooms = [{id: Math.floor(Math.random() * 8999 + 1000), users: 0}];
 
-io.on('connection', (socket) => {
-    socket.on('connect', msg => {
-        console.log('connected');
-        if(lastSocket) {
-            socket.partner = lastSocket;
-            lastSocket.partner = socket;
-            socket.emit('startGame');
-            lastSocket.emit('startGame');
-            lastSocket = false;
+io.on('connection', async socket => {
+    console.log(socket.id);
+
+    if(!socket.room) {
+        for(room of rooms) {
+            if(room.users < 2) {
+                socket.room = room;
+                room.users++;
+                socket.join(socket.room.id);
+                break;
+            }
         }
-        else
-            lastSocket = socket;
-      socket.emit('waiting');
-    });
+
+        if(!socket.room) {
+            const room = {id: Math.floor(Math.random() * 8999 + 1000), users: 1};
+            rooms.push(room);
+            socket.room = room;
+            socket.join(socket.room.id);
+        }
+
+        if(socket.room.users == 2)
+            io.in(socket.room.id).emit('startGame');
+    }
 
     socket.on('pose', pose => {
-        if(socket.partner)
-            socket.partner.emit('partnerPose', pose);
-    })
+        socket.broadcast.emit('partnerPose', pose);
+    });
+
+    socket.on('disconnecting', () => {
+        socket.room.users--;
+    });
+
+    console.log(rooms);
 });
 
 http.listen(port, () => {

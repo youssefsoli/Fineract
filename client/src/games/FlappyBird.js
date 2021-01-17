@@ -13,7 +13,6 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const bg = useRef(null);
     const pipeNorth = useRef(null);
     const pipeSouth = useRef(null);
-    const socket = io(window.location.origin.toString());
 
     class Game {
         constructor() {
@@ -84,9 +83,10 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const draw = (ctx) => {
         const game = canvasRef.current.game;
         const pose = canvasRef.current.pose;
+        const partnerPose = canvasRef.current.partnerPose;
         if (!pose || !game) return;
 
-        if(!canvasRef.current.started) {
+        if(!canvasRef.current.started || !partnerPose) {
             ctx.textAlign = 'center';
             ctx.font = '60px Verdana';
             ctx.fillText(
@@ -132,6 +132,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         }
 
         const { x, y } = pose.keypoints[0].position;
+        const { partnerX, partnerY } = partnerPose.keypoints[0].position;
 
         game.bird = bird.current;
         game.bg = bg.current;
@@ -211,6 +212,15 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
             game.bird.height * game.yScale
         );
 
+        console.log(partnerY);
+        ctx.drawImage(
+            game.bird,
+            game.bX + 50,
+            partnerY,
+            game.bird.width * game.xScale,
+            game.bird.height * game.yScale
+        );
+
         // Draw face
         ctx.drawImage(
             webcamRef.current.video,
@@ -243,17 +253,22 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
 
     useEffect(() => {
         canvasRef.current.started = false;
+        canvasRef.current.socket = io(window.location.origin.toString());
         canvasRef.current.game = new Game();
         render();
 
-        socket.on('startGame', () => (canvasRef.current.started = true))
+        canvasRef.current.socket.on('startGame', () => (canvasRef.current.started = true));
+        canvasRef.current.socket.on('partnerPose', pose => {
+            canvasRef.current.partnerPose = pose;
+            console.log(pose);
+        });
     }, []);
 
     // When pose updates
     useEffect(() => {
         canvasRef.current.pose = pose;
 
-        socket.emit('pose', pose);
+        canvasRef.current.socket.emit('pose', pose);
 
         let eventName;
         if (canvasRef.current.game.over && isTouchingRightShoulder(pose)) {
