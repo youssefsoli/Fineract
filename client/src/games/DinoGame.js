@@ -3,11 +3,10 @@ import { useEffect, useRef } from 'react';
 const DinoGame = ({ pose, canvasRef, ...props }) => {
     const draw = (ctx) => {
         const pose = canvasRef.current.pose;
-        if(!pose) return;
-        console.log(pose);
+        if (!pose) return;
         ctx.fillStyle = '#000000';
-        const {x, y} = pose.keypoints[0].position;
-        console.log(ctx.canvas.width, ctx.canvas.height);
+        const { x, y } = pose.keypoints[0].position;
+        // console.log(ctx.canvas.width, ctx.canvas.height);
         ctx.fillRect(x - 100, y - 100, 200, 200);
     };
 
@@ -16,7 +15,7 @@ const DinoGame = ({ pose, canvasRef, ...props }) => {
         draw(context);
         //ctx.drawImage(background, 0, 0);
         requestAnimationFrame(render);
-    }
+    };
 
     useEffect(() => {
         render();
@@ -27,10 +26,7 @@ const DinoGame = ({ pose, canvasRef, ...props }) => {
         canvasRef.current.pose = pose;
     }, [pose]);
 
-    return (
-        <>
-        </>
-    );
+    return <></>;
 };
 
 export default DinoGame;

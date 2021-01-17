@@ -4,13 +4,13 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import * as posenet from '@tensorflow-models/posenet';
 import FlappyBird from './games/FlappyBird';
+import Dino from './games/Dino';
 import useNet from './useLoadNet';
 // Frontend:
 import Game from './game';
 import Navbar from './navbar';
 import About from './about';
 import Footer from './footer';
-import DinoCalibrate from './calibrate/DinoCalibrate';
 
 function App() {
     const webcamRef = useRef(null);
@@ -18,7 +18,7 @@ function App() {
     const net = useNet({
         architecture: 'MobileNetV1',
         outputStride: 16,
-        inputResolution: { width: 160, height: 120 },
+        inputResolution: { width: 160, height: 120 }, //TODO: return this to 640x480
         multiplier: 0.5,
         imageScaleFactor: 0.3,
     });
@@ -156,6 +156,7 @@ function App() {
                                             title="Thighs"
                                             description="Play the classic Dinosaur Game by squatting, jumping and strafing! This excercise simulates lower body muscles."
                                             icon="squat.png"
+                                            link="/dino"
                                         />
                                         <Game
                                             title="General Workout Routines"
@@ -259,20 +260,20 @@ function App() {
                             )}
                         </div>
                     </Route>
-                    <Route path="/DinoCalibrate">
+                    <Route path="/dino">
                         <div className="App">
                             <Webcam
                                 ref={webcamRef}
                                 style={{
                                     position: 'absolute',
-                                    marginLeft: '0',
-                                    marginRight: '0',
+                                    marginLeft: 'auto',
+                                    marginRight: 'auto',
                                     left: 0,
                                     right: 0,
                                     textAlign: 'center',
                                     zIndex: 8,
                                     width: 'auto',
-                                    height: '80%',
+                                    height: '100%',
                                 }}
                             />
                             <canvas
@@ -285,12 +286,12 @@ function App() {
                                     right: 0,
                                     textAlign: 'center',
                                     zIndex: 9,
-                                    width: 'auto',
-                                    height: '80%',
+                                    width: '100%',
+                                    height: '100%',
                                 }}
                             />
                             {canvasRef.current && (
-                                <DinoCalibrate
+                                <Dino
                                     pose={pose}
                                     canvasRef={canvasRef}
                                     webcamRef={webcamRef}

@@ -1,11 +1,55 @@
 import { useEffect, useRef, useState } from 'react';
 import useSound from 'use-sound';
 import scoreSfx from './assets/score.mp3';
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client';
+import { useHistory } from 'react-router-dom';
+import { drawKeypoints } from '../utilities';
+import keypointIndex from '../keypointIndex';
 import {
     isTouchingLeftShoulder,
     isTouchingRightShoulder,
 } from '../../src/motionDetection';
+
+const drawPosition = (xCoor, yCoor, ctx, name, keypoints) => {
+    // Radii of the white glow.
+    let innerRadius = 10,
+        outerRadius = 130,
+        // Radius of the entire circle.
+        radius = 120;
+    let grd = ctx.createRadialGradient(
+        xCoor,
+        yCoor,
+        innerRadius,
+        xCoor,
+        yCoor,
+        outerRadius
+    );
+    let color;
+    if (keypoints) {
+        const keypointPos = keypoints[keypointIndex[name]].position;
+        if (
+            Math.sqrt(
+                Math.pow(xCoor - keypointPos.x, 2) +
+                    Math.pow(yCoor - keypointPos.y, 2)
+            ) <= radius
+        ) {
+            color = '#a0ff2b';
+        } else {
+            color = '#ff2b72';
+        }
+    } else {
+        color = '#ff2b72';
+    }
+
+    grd.addColorStop(0, color);
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(xCoor, yCoor, radius, 0, 2 * Math.PI);
+    ctx.fill();
+
+    return color === '#a0ff2b';
+};
 
 const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const [playScore] = useSound(scoreSfx);
@@ -13,7 +57,8 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const bg = useRef(null);
     const pipeNorth = useRef(null);
     const pipeSouth = useRef(null);
-    const azureFrame = useRef(null);
+    const [calibration, setCalibration] = useState(true);
+    const history = useHistory();
 
     class Game {
         constructor() {
@@ -50,6 +95,15 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 false
             );
 
+            // exit
+            document.addEventListener(
+                'exit',
+                () => {
+                    history.push('/');
+                },
+                false
+            );
+
             // some variables
             this.yScale = (window.innerHeight + window.innerWidth) / 1500;
             this.xScale = this.yScale;
@@ -79,6 +133,48 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1) + min);
+    };
+
+    const calibrationDraw = (ctx, keypoints) => {
+        const x = window.innerWidth;
+        const y = window.innerHeight;
+        // fill background with grey
+
+        // draw video
+        ctx.drawImage(webcamRef.current.video, 0, 0, x, y);
+
+        let numValid = 0;
+        // left wrist
+        if (
+            drawPosition(9 * (x / 11), 7 * (y / 8), ctx, 'leftWrist', keypoints)
+        ) {
+            numValid++;
+        }
+
+        // right wrist
+        if (
+            drawPosition(
+                2 * (x / 11),
+                7 * (y / 8),
+                ctx,
+                'rightWrist',
+                keypoints
+            )
+        ) {
+            numValid++;
+        }
+
+        // left shoulder
+        if (drawPosition(2 * (x / 3), y / 8, ctx, 'leftShoulder', keypoints)) {
+            numValid++;
+        }
+
+        // right shoulder
+        if (drawPosition(x / 3, y / 8, ctx, 'rightShoulder', keypoints)) {
+            numValid++;
+        }
+
+        return numValid === 4;
     };
 
     const draw = (ctx) => {
@@ -113,6 +209,11 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 'Tap your right shoulder with your right hand to restart',
                 game.cvs.width / 2,
                 game.cvs.height / 2 + 60
+            );
+            ctx.fillText(
+                'Tap your left shoulder with your left hand to exit',
+                game.cvs.width / 2,
+                game.cvs.height / 2 + 120
             );
             return;
         }
@@ -243,11 +344,26 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         ctx.fillText('Score : ' + game.score, 60, game.cvs.height - 20);
     };
 
+    const calibrationRender = () => {
+        if (!canvasRef.current) return;
+        const context = canvasRef.current.getContext('2d');
+        if (calibrationDraw(context, canvasRef.current.pose.keypoints)) {
+            setCalibration(false);
+            return;
+        }
+        drawKeypoints(canvasRef.current.pose.keypoints, 0.6, context, [
+            'leftShoulder',
+            'rightShoulder',
+            'leftWrist',
+            'rightWrist',
+        ]);
+        requestAnimationFrame(calibrationRender);
+    };
+
     const render = () => {
-        if(!canvasRef.current) return;
+        if (!canvasRef.current) return;
         const context = canvasRef.current.getContext('2d');
         draw(context);
-        //ctx.drawImage(background, 0, 0);
         requestAnimationFrame(render);
     };
 
@@ -267,33 +383,37 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     useEffect(() => {
         canvasRef.current.pose = pose;
 
-        canvasRef.current.socket.emit('pose', pose);
+        if (calibration) {
+            calibrationRender();
+        } else {
+            canvasRef.current.socket.emit('pose', pose);
 
-        let eventName;
-        if (canvasRef.current.game.over && isTouchingRightShoulder(pose)) {
-            eventName = 'restart';
-        } else if (
-            canvasRef.current.game.over &&
-            isTouchingLeftShoulder(pose)
-        ) {
-            eventName = 'exit';
-        } else if (
-            !canvasRef.current.game.pause &&
-            !canvasRef.current.game.over &&
-            isTouchingLeftShoulder(pose)
-        ) {
-            eventName = 'pause';
-        } else if (
-            canvasRef.current.game.pause &&
-            !canvasRef.current.game.over &&
-            isTouchingRightShoulder(pose)
-        ) {
-            eventName = 'resume';
-        }
+            let eventName;
+            if (canvasRef.current.game.over && isTouchingRightShoulder(pose)) {
+                eventName = 'restart';
+            } else if (
+                canvasRef.current.game.over &&
+                isTouchingLeftShoulder(pose)
+            ) {
+                eventName = 'exit';
+            } else if (
+                !canvasRef.current.game.pause &&
+                !canvasRef.current.game.over &&
+                isTouchingLeftShoulder(pose)
+            ) {
+                eventName = 'pause';
+            } else if (
+                canvasRef.current.game.pause &&
+                !canvasRef.current.game.over &&
+                isTouchingRightShoulder(pose)
+            ) {
+                eventName = 'resume';
+            }
 
-        if (eventName) {
-            const event = new Event(eventName);
-            document.dispatchEvent(event);
+            if (eventName) {
+                const event = new Event(eventName);
+                document.dispatchEvent(event);
+            }
         }
     }, [pose]);
 

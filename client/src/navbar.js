@@ -9,7 +9,7 @@ import MdAdd from '@material-ui/icons/Add';
 import MdClose from '@material-ui/icons/Clear';
 import MdHome from '@material-ui/icons/Home';
 import { mdiBird } from '@mdi/js';
-import Icon from '@mdi/react'
+import Icon from '@mdi/react';
 
 const NavBar = () => {
     const [isOpen, setOpen] = useState(false);
@@ -32,17 +32,12 @@ const NavBar = () => {
                         <MdClose style={{ fontSize: 20 }} nativeColor="white" />
                     }
                     backgroundColor="black"
-                    onClick={() =>
-                        setOpen(!isOpen)
-                    }
+                    onClick={() => setOpen(!isOpen)}
                     size={56}
                 />
                 <ChildButton
                     icon={
-                        <MdHome
-                        style={{ fontSize: 20 }}
-                        nativeColor="black"
-                    />
+                        <MdHome style={{ fontSize: 20 }} nativeColor="black" />
                     }
                     backgroundColor="white"
                     size={40}
@@ -52,11 +47,7 @@ const NavBar = () => {
                     }}
                 />
                 <ChildButton
-                    icon={
-                        <Icon path={mdiBird}
-                        size={1}
-                        color="black"/>
-                    }
+                    icon={<Icon path={mdiBird} size={1} color="black" />}
                     backgroundColor="white"
                     size={40}
                     onClick={() => {
