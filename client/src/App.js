@@ -72,9 +72,9 @@ function App() {
             <Router>
             <Switch>
             <Route exact path="/">
-                <Navbar />
                         <div className="html">
                             <section id="banner" className="banner">
+                            <Navbar />
                                 <div className="container">
                                     <div className="row">
                                         <div className="col-md-6 banner-l">
@@ -191,6 +191,7 @@ function App() {
                     </Route>
                     <Route path="/flappy">
                         <div className="App">
+                        <Navbar />
                             <Webcam
                                 ref={webcamRef}
                                 style={{
