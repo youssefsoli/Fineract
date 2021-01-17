@@ -22,6 +22,7 @@ function App() {
         imageScaleFactor: 0.3,
     });
     const [pose, setPose] = useState(false);
+    const [nav, setNav] = useState(false);
 
     useEffect(() => {
         if (!net) return () => {};
@@ -73,8 +74,8 @@ function App() {
             <Switch>
             <Route exact path="/">
                         <div className="html">
+                        <Navbar />
                             <section id="banner" className="banner">
-                            <Navbar />
                                 <div className="container">
                                     <div className="row">
                                         <div className="col-md-6 banner-l">
@@ -191,7 +192,7 @@ function App() {
                     </Route>
                     <Route path="/flappy">
                         <div className="App">
-                        <Navbar />
+                        {nav && (<Navbar />)}
                             <Webcam
                                 ref={webcamRef}
                                 style={{
@@ -226,6 +227,7 @@ function App() {
                                     pose={pose}
                                     canvasRef={canvasRef}
                                     webcamRef={webcamRef}
+                                    setNav={(nav) => setNav(nav)}
                                 />
                             )}
                         </div>

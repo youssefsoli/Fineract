@@ -7,7 +7,7 @@ import {
 } from 'react-floating-button-menu';
 import MdAdd from '@material-ui/icons/Add';
 import MdClose from '@material-ui/icons/Clear';
-import MdFavorite from '@material-ui/icons/Favorite';
+import MdHome from '@material-ui/icons/Home';
 import { mdiBird } from '@mdi/js';
 import Icon from '@mdi/react'
 
@@ -39,14 +39,17 @@ const NavBar = () => {
                 />
                 <ChildButton
                     icon={
-                        <MdFavorite
+                        <MdHome
                         style={{ fontSize: 20 }}
                         nativeColor="black"
                     />
                     }
                     backgroundColor="white"
                     size={40}
-                    onClick={() => history.push('/')}
+                    onClick={() => {
+                        setOpen(false);
+                        history.push('/');
+                    }}
                 />
                 <ChildButton
                     icon={
@@ -56,7 +59,10 @@ const NavBar = () => {
                     }
                     backgroundColor="white"
                     size={40}
-                    onClick={() => history.push('/flappy')}
+                    onClick={() => {
+                        setOpen(false);
+                        history.push('/flappy');
+                    }}
                 />
             </FloatingMenu>
         </div>

@@ -6,7 +6,7 @@ import {
     isTouchingRightShoulder,
 } from '../../src/motionDetection';
 
-const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
+const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const [playScore] = useSound(scoreSfx);
     const bird = useRef(null);
     const bg = useRef(null);
@@ -17,6 +17,8 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
         constructor() {
             this.cvs = canvasRef.current;
             console.log(this.cvs);
+
+            setNav(false);
 
             // restart
             document.addEventListener(
@@ -32,6 +34,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
                 'pause',
                 () => {
                     canvasRef.current.game.pause = true;
+                    setNav(true);
                 },
                 false
             );
@@ -41,6 +44,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
                 'resume',
                 () => {
                     canvasRef.current.game.pause = false;
+                    setNav(false);
                 },
                 false
             );
@@ -179,6 +183,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
                         game.pipe[i].y + game.constant)
             ) {
                 game.over = true;
+                setNav(true);
                 //canvasRef.current.game = new Game();
                 return;
             }
