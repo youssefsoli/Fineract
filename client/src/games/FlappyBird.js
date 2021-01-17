@@ -263,7 +263,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
             isTouchingLeftShoulder(pose)
         ) {
             eventName = 'exit';
-        } else if (!canvas.current.game.pause && isTouchingLeftShoulder(pose)) {
+        } else if (!canvasRef.current.game.pause && isTouchingLeftShoulder(pose)) {
             eventName = 'pause';
         } else if (
             canvasRef.current.game.pause &&
