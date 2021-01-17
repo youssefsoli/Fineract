@@ -18,40 +18,6 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
             this.cvs = canvasRef.current;
             console.log(this.cvs);
 
-            // document.addEventListener(
-            //     'keypress',
-            //     (e) => {
-            //         if (&& e.key === ' ')
-            //             canvasRef.current.game = new Game();
-            //     },
-            //     false
-            // );
-
-            // game over
-            document.addEventListener(
-                'over',
-                () => {
-                    const game = canvasRef.current.game;
-                    const ctx = canvasRef.current.getContext('2d');
-                    ctx.textAlign = 'center';
-                    ctx.fillStyle = '#000';
-                    ctx.font = '60px Verdana';
-                    ctx.fillText(
-                        'Score : ' + game.score,
-                        game.cvs.width / 2,
-                        game.cvs.height / 2
-                    );
-
-                    ctx.font = '30px Verdana';
-                    ctx.fillText(
-                        'Tap your right shoulder with your right hand to restart',
-                        game.cvs.width / 2,
-                        game.cvs.height / 2 + 60
-                    );
-                },
-                false
-            );
-
             // restart
             document.addEventListener(
                 'restart',
@@ -66,23 +32,6 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
                 'pause',
                 () => {
                     canvasRef.current.game.pause = true;
-                    const game = canvasRef.current.game;
-                    const ctx = canvasRef.current.getContext('2d');
-                    ctx.textAlign = 'center';
-                    ctx.fillStyle = '#000';
-                    ctx.font = '60px Verdana';
-                    ctx.fillText(
-                        'Paused',
-                        game.cvs.width / 2,
-                        game.cvs.height / 2
-                    );
-
-                    ctx.font = '30px Verdana';
-                    ctx.fillText(
-                        'Tap your right shoulder with your right hand to resume',
-                        game.cvs.width / 2,
-                        game.cvs.height / 2 + 60
-                    );
                 },
                 false
             );
@@ -132,8 +81,37 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
         const pose = canvasRef.current.pose;
         if (!pose || !game) return;
 
-        if (game.over || game.pause) {
+        if (game.over) {
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#000';
+            ctx.font = '60px Verdana';
+            ctx.fillText(
+                'Score : ' + game.score,
+                game.cvs.width / 2,
+                game.cvs.height / 2
+            );
+
+            ctx.font = '30px Verdana';
+            ctx.fillText(
+                'Tap your right shoulder with your right hand to restart',
+                game.cvs.width / 2,
+                game.cvs.height / 2 + 60
+            );
             return;
+        }
+
+        if (game.pause) {
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#000';
+            ctx.font = '60px Verdana';
+            ctx.fillText('Paused', game.cvs.width / 2, game.cvs.height / 2);
+
+            ctx.font = '30px Verdana';
+            ctx.fillText(
+                'Tap your right shoulder with your right hand to resume',
+                game.cvs.width / 2,
+                game.cvs.height / 2 + 60
+            );
         }
 
         const { x, y } = pose.keypoints[0].position;
@@ -200,8 +178,6 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
                         game.pipe[i].y + game.constant)
             ) {
                 game.over = true;
-                let event = new Event('over');
-                document.dispatchEvent(event);
                 //canvasRef.current.game = new Game();
                 return;
             }
@@ -263,10 +239,15 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
             isTouchingLeftShoulder(pose)
         ) {
             eventName = 'exit';
-        } else if (!canvasRef.current.game.pause && isTouchingLeftShoulder(pose)) {
+        } else if (
+            !canvasRef.current.game.pause &&
+            !canvasRef.current.game.over &&
+            isTouchingLeftShoulder(pose)
+        ) {
             eventName = 'pause';
         } else if (
             canvasRef.current.game.pause &&
+            !canvasRef.current.game.over &&
             isTouchingRightShoulder(pose)
         ) {
             eventName = 'resume';
