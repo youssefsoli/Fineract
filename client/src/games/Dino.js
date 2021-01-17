@@ -6,6 +6,10 @@ import useSound from 'use-sound';
 import scoreSfx from './assets/score.mp3';
 import { drawKeypoints } from '../utilities';
 import keypointIndex from '../keypointIndex';
+import {
+    isTouchingLeftShoulder,
+    isTouchingRightShoulder,
+} from '../../src/motionDetection';
 
 const drawPosition = (xCoor, yCoor, ctx, name, keypoints) => {
     // Radii of the white glow.
@@ -62,10 +66,9 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
             this.cvs = canvasRef.current;
 
             document.addEventListener(
-                'keypress',
-                (e) => {
-                    if (canvasRef.current.game.over && e.key === ' ')
-                        canvasRef.current.game = new Game();
+                'restart',
+                () => {
+                    canvasRef.current.game = new Game();
                 },
                 false
             );
@@ -204,7 +207,7 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
 
             ctx.font = '30px Verdana';
             ctx.fillText(
-                'Press Space to restart',
+                'Tap your right shoulder with your right hand to restart',
                 game.cvs.width / 2,
                 game.cvs.height / 2 + 60
             );
@@ -406,6 +409,33 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         canvasRef.current.pose = pose;
         if (calibration) {
             calibrationRender();
+        } else {
+            let eventName;
+            if (canvasRef.current.game.over && isTouchingRightShoulder(pose)) {
+                eventName = 'restart';
+            } else if (
+                canvasRef.current.game.over &&
+                isTouchingLeftShoulder(pose)
+            ) {
+                eventName = 'exit';
+            } else if (
+                !canvasRef.current.game.pause &&
+                !canvasRef.current.game.over &&
+                isTouchingLeftShoulder(pose)
+            ) {
+                eventName = 'pause';
+            } else if (
+                canvasRef.current.game.pause &&
+                !canvasRef.current.game.over &&
+                isTouchingRightShoulder(pose)
+            ) {
+                eventName = 'resume';
+            }
+
+            if (eventName) {
+                const event = new Event(eventName);
+                document.dispatchEvent(event);
+            }
         }
     }, [pose]);
 

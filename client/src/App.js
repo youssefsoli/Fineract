@@ -18,7 +18,7 @@ function App() {
     const net = useNet({
         architecture: 'MobileNetV1',
         outputStride: 16,
-        inputResolution: { width: 160, height: 120 },
+        inputResolution: { width: 160, height: 120 }, //TODO: return this to 640x480
         multiplier: 0.5,
         imageScaleFactor: 0.3,
     });
