@@ -1,7 +1,74 @@
+/* Common Start */
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+em,
+ol,
+ul,
+li,
+a {
+    margin: 0;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+button:focus {
+    outline: 5px auto transparent;
+}
+
+img {
+    vertical-align: middle;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.heading-font {
+    font-family: "Playfair Display", sans-serif;
+}
+
+.common {
+    padding-top: 98px;
+}
+
+.section-head h2 {
+    padding-bottom: 50px;
+    font-size: 32px;
+    letter-spacing: 2px;
+    word-spacing: 2px;
+    font-weight: 900;
+}
+
+/* Common End */
+
 /* Banner Start */
 
 .banner {
-    background: url(../images/banner-img.png);
+    background: url(../public/images/banner-img.png );
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
