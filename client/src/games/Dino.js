@@ -15,6 +15,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
             this.cvs = canvasRef.current;
 
             // some variables
+            this.constant = 0;
             this.speed = 5;
             this.bX = 10;
             this.score = 0;
@@ -106,7 +107,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
                 const obsType = Math.random() < 0.7 ? 'cactus' : 'bird';
                 game.obstacles.push({
                     x: cvWidth,
-                    y: obsType === 'cactus'? cvHeight : cvHeight * 0.5,
+                    y: obsType === 'cactus'? cvHeight - cactusHeight : cvHeight * 0.5,
                     type: obsType,
                 });
             }
