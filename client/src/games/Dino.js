@@ -98,11 +98,8 @@ const Dino = ({ pose, canvasRef, ...props }) => {
             if (Math.random() < 0.1) {
                 const obsType = Math.random() < 0.7 ? 'cactus' : 'bird';
                 game.obstacles.push({
-                    x: game.cvs.width,
-                    y:
-                        obsType === 'cactus'
-                            ? cvHeight - cactusHeight
-                            : cvHeight * 0.5,
+                    x: cvWidth,
+                    y: obsType === 'cactus'? cvHeight : cvHeight * 0.5,
                     type: obsType,
                 });
             }
