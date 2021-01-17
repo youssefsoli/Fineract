@@ -136,52 +136,78 @@ function App() {
                                         <div class="col-md-12 text-center">
                                             <div class="section-head">
                                                 <h2 class="heading-font">
-                                                    Choose a muscle to train:
+                                                Choose a muscle to train
                                                 </h2>
+                                                <h3 class="heading-font">
+                                                Singleplayer
+                                                </h3>
+                                                <br></br>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row choose-slick">
                                         <Game
                                             title="Upper Chest"
-                                            description="Train your upper chest"
-                                            icon="push-up_2548518"
+                                            description="Play the infamous Flappy Bird by controlling the bird through push ups! This excercise simulates upper body muscles."
+                                            icon="flexed-muscles.png"
                                             link="/flappy"
                                         />
                                         <Game
                                             title="Thighs"
-                                            description="Jump Duck but dont roll!"
-                                            icon="flaticon-icon-135439"
+                                            description="Play the classic Dinosaur Game by squatting, jumping and strafing! This excercise simulates lower body muscles."
+                                            icon="squat.png"
                                         />
                                         <Game
                                             title="General Workout Routines"
-                                            description="Generic things"
-                                            icon="flaticon-workout"
+                                            description="Not interested in a game? Look through our recommended catalogue of other excercises you can do at home!"
+                                            icon="excercise.png"
                                         />
                                     </div>
-
-                                    <div class="col-md-12 text-center">
-                                        <div class="section-head">
-                                            <h4 class="heading-font">
-                                                Coming Soon:
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div class="row choose-slick">
+                                    {/* <div class="row choose-slick">
                                         <Game
                                             title="Lower Chest"
-                                            description="Train your upper chest"
+                                            description="Coming Soon"
                                             icon="push-up_2548518"
                                         />
                                         <Game
                                             title="Neck Muscles"
-                                            description="Jump Duck but dont roll!"
+                                            description="Coming Soon"
                                             icon="flaticon-icon-135439"
                                         />
                                         <Game
                                             title="General Workout Routines"
-                                            description="Generic things"
+                                            description="Coming Soon    "
                                             icon="flaticon-workout"
+                                        />
+                                    </div> */}
+
+                                    {/* Multiplayer */}
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <div class="section-head">
+                                                <h3 class="heading-font">
+                                                    Multiplayer
+                                                </h3>
+                                                <br></br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row choose-slick center">
+                                        <Game
+                                            title="Upper Chest"
+                                            description="Flappy bird, but this time you're with your friends! Make sure you turn your cameras on for some hilarious action!"
+                                            icon="flexed-muscles.png"
+                                            link="/flappy"
+                                        />
+                                        <Game
+                                            title="Thighs"
+                                            description="Coming Soon"
+                                            icon="squat.png"
+                                        />
+                                        <Game
+                                            title="Neck Muscles"
+                                            description="Coming Soon"
+                                            icon="excercise.png"
                                         />
                                     </div>
                                 </div>

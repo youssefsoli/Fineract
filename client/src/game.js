@@ -7,7 +7,7 @@ const Game = props => {
         <div class="col-md-4">
             <Link to={link}>
                 <div class="about-inner text-center">
-                    <i class={icon}></i>
+                    <img src={"images/"+icon} alt=""/>
                     <h4 class="heading-font">{title}</h4>
                     <p>{description}</p>
                 </div>
