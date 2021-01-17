@@ -10,6 +10,7 @@ import Game from './game';
 import Navbar from './navbar';
 import About from './about';
 import Footer from './footer';
+import DinoCalibrate from './calibrate/DinoCalibrate';
 
 function App() {
     const webcamRef = useRef(null);
@@ -26,7 +27,7 @@ function App() {
 
     useEffect(() => {
         if (!net) return () => {};
-        if ([net].some(elem => elem instanceof Error)) return () => {};
+        if ([net].some((elem) => elem instanceof Error)) return () => {};
 
         //  Load posenet
         const runPosenet = async () => {
@@ -37,7 +38,7 @@ function App() {
         runPosenet();
     }, [net]);
 
-    const detect = async net => {
+    const detect = async (net) => {
         if (
             typeof webcamRef.current !== 'undefined' &&
             webcamRef.current !== null &&
@@ -58,7 +59,7 @@ function App() {
 
             // Make Detections
             const pose = await net.estimateSinglePose(video);
-            pose.keypoints = pose.keypoints.map(keypoint => {
+            pose.keypoints = pose.keypoints.map((keypoint) => {
                 keypoint.position.x *= window.innerWidth / videoWidth;
                 keypoint.position.y *= window.innerHeight / videoHeight;
                 return keypoint;
@@ -71,10 +72,10 @@ function App() {
     return (
         <div className="parent">
             <Router>
-            <Switch>
-            <Route exact path="/">
+                <Switch>
+                    <Route exact path="/">
                         <div className="html">
-                        <Navbar />
+                            <Navbar />
                             <section id="banner" className="banner">
                                 <div className="container">
                                     <div className="row">
@@ -192,7 +193,7 @@ function App() {
                     </Route>
                     <Route path="/flappy">
                         <div className="App">
-                        {nav && (<Navbar />)}
+                            {nav && <Navbar />}
                             <Webcam
                                 ref={webcamRef}
                                 style={{
@@ -224,6 +225,46 @@ function App() {
                             />
                             {canvasRef.current && (
                                 <FlappyBird
+                                    pose={pose}
+                                    canvasRef={canvasRef}
+                                    webcamRef={webcamRef}
+                                    setNav={(nav) => setNav(nav)}
+                                />
+                            )}
+                        </div>
+                    </Route>
+                    <Route path="/DinoCalibrate">
+                        <div className="App">
+                            <Webcam
+                                ref={webcamRef}
+                                style={{
+                                    position: 'absolute',
+                                    marginLeft: '0',
+                                    marginRight: '0',
+                                    left: 0,
+                                    right: 0,
+                                    textAlign: 'center',
+                                    zIndex: 8,
+                                    width: 'auto',
+                                    height: '80%',
+                                }}
+                            />
+                            <canvas
+                                ref={canvasRef}
+                                style={{
+                                    position: 'absolute',
+                                    marginLeft: 'auto',
+                                    marginRight: 'auto',
+                                    left: 0,
+                                    right: 0,
+                                    textAlign: 'center',
+                                    zIndex: 9,
+                                    width: 'auto',
+                                    height: '80%',
+                                }}
+                            />
+                            {canvasRef.current && (
+                                <DinoCalibrate
                                     pose={pose}
                                     canvasRef={canvasRef}
                                     webcamRef={webcamRef}
