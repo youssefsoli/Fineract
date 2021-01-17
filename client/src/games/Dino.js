@@ -195,10 +195,13 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
 
         drawPoint(ctx, game.bodyPositions.leftHip.avg, 20, 5, 'red');
 
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, game.cvs.width, game.cvs.height);
         if (game.over) {
             ctx.textAlign = 'center';
             ctx.fillStyle = '#000';
             ctx.font = '60px Verdana';
+
             ctx.fillText(
                 'Score : ' + game.score,
                 game.cvs.width / 2,
