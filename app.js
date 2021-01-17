@@ -8,7 +8,8 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http, {
     cors: {
       origin: "*",
-      methods: ["GET", "POST"]
+      methods: ["GET", "POST"],
+      credentials: true
     }
 });
 const port = process.env.PORT || 3000;
