@@ -6,11 +6,12 @@ import useSound from 'use-sound';
 import scoreSfx from './assets/score.mp3';
 
 const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
-    // const [playScore] = useSound(scoreSfx);
+    const [playScore] = useSound(scoreSfx);
     const bird = useRef(null);
     const bg = useRef(null);
     const dino = useRef(null);
     const cactus = useRef(null);
+    const crouchdino = useRef(null);
 
     class Game {
         constructor() {
@@ -86,11 +87,12 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         game.bg = bg.current;
         game.dino = dino.current;
         game.cactus = cactus.current;
+        game.crouchdino = crouchdino.current;
 
         const cvWidth = canvasRef.current.width;
         const cvHeight = canvasRef.current.height;
 
-        const cactusHeight = cvHeight * 0.2;
+        const cactusHeight = cvHeight * 0.12;
         // const cactusWidth = (cactusHeight * 309) / 533;
         const cactusWidth = cactusHeight;
 
@@ -100,8 +102,8 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         const dinoHeight = 400;
         const dinoWidth = 400;
 
-        const crouchingDinoHeight = 200;
-        const crouchingDinoWidth = 200;
+        const crouchingDinoWidth = 400;
+        const crouchingDinoHeight = crouchingDinoWidth * (65/134);
 
         drawPoint(ctx, game.bodyPositions.leftHip.avg, 20, 5, 'red')
 
@@ -123,7 +125,10 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         // check collisions
         let collision = false;
 
-        const dinoTop = game.dinoY;
+        let dinoTop = game.dinoY;
+        if (game.dinoState === 'crouching') {
+            dinoTop += (dinoHeight - crouchingDinoHeight)
+        }
         const dinoBottom = game.dinoY + dinoHeight;
         const dinoX = dinoWidth;
         for (let i = 0; i < game.obstacles.length; i++) {
@@ -151,7 +156,7 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         }
 
         if (collision) {
-            // game.over = true
+            game.over = true
         }
 
         game.dinoYBase = canvasRef.current.height - 450;
@@ -163,7 +168,7 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
             console.log('jumping actions');
             game.upwards += 0.8;
         } else if (jumping) {
-            game.upwards = -25
+            game.upwards = -28
             game.dinoState = 'jumping';
         } else if (game.dinoState === 'crouching') {
             if (crouching) {
@@ -208,18 +213,12 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
 
             game.obstacles[i].x -= game.speed;
 
-            // detect collision
-
-            // if( game.bX + game.bird.width >= game.pipe[i].x && game.bX <= game.pipe[i].x + game.pipeNorth.width && (y <= game.pipe[i].y + game.pipeNorth.height || y + game.bird.height >= game.pipe[i].y + game.constant)){
-            //     console.log('fail');
-            // }
-
-            if (game.obstacles[i].x === 5) {
-                game.score++;
-                // playScore();
+            if (game.obstacles[i].x > 0 && game.obstacles[i].x < game.speed - 1) {
+                game.score += 1;
+                playScore();
             }
 
-            if (game.obstacles[i].x < 0) {
+            if (game.obstacles[i].x < -30) {
                 game.obstacles.splice(i, 1);
             }
         }
@@ -229,13 +228,11 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
                 const obsType = Math.random() < 0.7 ? 'cactus' : 'bird';
                 game.obstacles.push({
                     x: cvWidth,
-                    y: obsType === 'cactus'? cvHeight - cactusHeight : cvHeight * 0.6,
+                    y: obsType === 'cactus'? cvHeight - cactusHeight - 40 : cvHeight * 0.6,
                     type: obsType,
                 });
             }
         }
-
-        // ctx.drawImage(fg, 0, cvs.height - fg.height);
 
         if (game.bodyPositions.count < 100) {
             game.dinoY = canvasRef.current.height - dinoHeight - 50;
@@ -252,11 +249,11 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         
         if (game.dinoState === 'crouching') {
             ctx.drawImage(
-                bird.current,
+                crouchdino.current,
                 game.bX,
-                game.dinoY,
-                dinoHeight,
-                dinoWidth
+                game.dinoY + (dinoHeight - crouchingDinoHeight),
+                crouchingDinoWidth,
+                crouchingDinoHeight
             );
         } else {
             ctx.drawImage(
@@ -316,6 +313,13 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
             <img
                 ref={dino}
                 src="assets/unnamed-removebg-preview.png"
+                style={{ display: 'none' }}
+                className="hidden"
+                alt=""
+            />
+            <img
+                ref={crouchdino}
+                src="assets/crouchdino.png"
                 style={{ display: 'none' }}
                 className="hidden"
                 alt=""
