@@ -82,8 +82,7 @@ function App() {
                                         <div className="col-md-6 banner-l">
                                             <div className="banner-text">
                                                 <h3>
-                                                    Welcome To **SUPER COOL APP
-                                                    NAME**
+                                                    Welcome To Fineract
                                                 </h3>
                                                 {/* TODO: Write Cool APP name and better moto */}
                                                 <h1 className="heading-font">
@@ -91,7 +90,7 @@ function App() {
                                                     your excercises
                                                 </h1>
                                                 <p>
-                                                    **APP NAME** Allows you to
+                                                    Fineract Allows you to
                                                     gamify your excercises, by
                                                     literally playing a game
                                                     with your body. Choose from
