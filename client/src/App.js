@@ -1,7 +1,10 @@
-// import './App.css';
-import React, { useRef } from 'react';
+import './App.css';
+import React, { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import * as posenet from '@tensorflow-models/posenet';
+import FlappyBird from './games/FlappyBird';
+import useNet from './useLoadNet';
+// Frontend:
 import Game from './game';
 import Navbar from './navbar';
 import About from './about';
@@ -10,24 +13,34 @@ import Footer from './footer';
 function App() {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
+    const net = useNet({
+        architecture: 'MobileNetV1',
+        outputStride: 16,
+        inputResolution: { width: 160, height: 120 },
+        multiplier: 0.5,
+        imageScaleFactor: 0.3,
+    });
+    const [pose, setPose] = useState(false);
 
-    //  Load posenet
-    const runPosenet = async () => {
-        const net = await posenet.load({
-            inputResolution: { width: 160, height: 120 },
-            scale: 0.8,
-        });
-        //
-        setInterval(() => {
-            detect(net);
-        }, 30);
-    };
+    useEffect(() => {
+        if (!net) return () => {};
+        if ([net].some((elem) => elem instanceof Error)) return () => {};
+
+        //  Load posenet
+        const runPosenet = async () => {
+            setInterval(() => {
+                detect(net);
+            }, 30);
+        };
+        runPosenet();
+    }, [net]);
 
     const detect = async (net) => {
         if (
             typeof webcamRef.current !== 'undefined' &&
             webcamRef.current !== null &&
-            webcamRef.current.video.readyState === 4
+            webcamRef.current.video.readyState === 4 &&
+            net !== null
         ) {
             // Get Video Properties
             const video = webcamRef.current.video;
@@ -38,13 +51,20 @@ function App() {
             webcamRef.current.video.width = videoWidth;
             webcamRef.current.video.height = videoHeight;
 
+            canvasRef.current.width = window.innerWidth;
+            canvasRef.current.height = window.innerHeight;
+
             // Make Detections
             const pose = await net.estimateSinglePose(video);
-            console.log(pose);
+            pose.keypoints = pose.keypoints.map((keypoint) => {
+                keypoint.position.x *= window.innerWidth / videoWidth;
+                keypoint.position.y *= window.innerHeight / videoHeight;
+                return keypoint;
+            });
+
+            setPose(pose);
         }
     };
-
-    runPosenet();
 
     return (
         <div className="app">
@@ -167,6 +187,40 @@ function App() {
                 />
             </div>
         </div>   
+        <div className="App">
+            <Webcam
+                ref={webcamRef}
+                style={{
+                    position: 'absolute',
+                    marginLeft: '0',
+                    marginRight: '0',
+                    left: 0,
+                    right: 0,
+                    textAlign: 'center',
+                    zIndex: 8,
+                    width: 'auto',
+                    height: '10%',
+                }}
+            />
+
+            <canvas
+                ref={canvasRef}
+                style={{
+                    position: 'absolute',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    left: 0,
+                    right: 0,
+                    textAlign: 'center',
+                    zIndex: 9,
+                    width: '100%',
+                    height: '100%',
+                }}
+            />
+            {canvasRef.current && (
+                <FlappyBird pose={pose} canvasRef={canvasRef} webcamRef={webcamRef} />
+            )}
+        </div>
     );
 }
 
