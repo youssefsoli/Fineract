@@ -132,7 +132,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         }
 
         const { x, y } = pose.keypoints[0].position;
-        const { partnerX, partnerY } = partnerPose.keypoints[0].position;
+        const { x: partnerX, y: partnerY } = partnerPose.keypoints[0].position;
 
         game.bird = bird.current;
         game.bg = bg.current;
@@ -212,10 +212,9 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
             game.bird.height * game.yScale
         );
 
-        console.log(partnerY);
         ctx.drawImage(
             game.bird,
-            game.bX + 50,
+            game.bX + 100,
             partnerY,
             game.bird.width * game.xScale,
             game.bird.height * game.yScale
@@ -260,7 +259,6 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         canvasRef.current.socket.on('startGame', () => (canvasRef.current.started = true));
         canvasRef.current.socket.on('partnerPose', pose => {
             canvasRef.current.partnerPose = pose;
-            console.log(pose);
         });
     }, []);
 
