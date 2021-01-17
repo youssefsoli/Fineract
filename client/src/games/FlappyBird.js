@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import useSound from 'use-sound';
 import scoreSfx from './assets/score.mp3';
+import { io } from "socket.io-client";
 import {
     isTouchingLeftShoulder,
     isTouchingRightShoulder,
@@ -12,11 +13,11 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const bg = useRef(null);
     const pipeNorth = useRef(null);
     const pipeSouth = useRef(null);
+    const socket = io(window.location.origin.toString());
 
     class Game {
         constructor() {
             this.cvs = canvasRef.current;
-            console.log(this.cvs);
 
             setNav(false);
 
@@ -84,6 +85,17 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
         const game = canvasRef.current.game;
         const pose = canvasRef.current.pose;
         if (!pose || !game) return;
+
+        if(!canvasRef.current.started) {
+            ctx.textAlign = 'center';
+            ctx.font = '60px Verdana';
+            ctx.fillText(
+                'Waiting for partner',
+                game.cvs.width / 2,
+                game.cvs.height / 2
+            );
+            return;
+        }
 
         if (game.over) {
             ctx.textAlign = 'center';
@@ -230,13 +242,18 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     };
 
     useEffect(() => {
+        canvasRef.current.started = false;
         canvasRef.current.game = new Game();
         render();
+
+        socket.on('startGame', () => (canvasRef.current.started = true))
     }, []);
 
     // When pose updates
     useEffect(() => {
         canvasRef.current.pose = pose;
+
+        socket.emit('pose', pose);
 
         let eventName;
         if (canvasRef.current.game.over && isTouchingRightShoulder(pose)) {
