@@ -1,0 +1,358 @@
+/*
+------------------
+
+Template Name: OMYOGA - Yoga Fitness HTML5 Template
+Author: Ingenious_team
+Author Email: ingeniousteam786@gmail.com
+Version: 1
+------------------ */
+
+
+@media (min-width: 1200px) and (max-width: 1300px) {
+    
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .banner-l {
+    top: 67%;
+}
+    .banner-text h1 {
+    font-size: 45px;
+}
+    .banner-block img {
+    padding-top: 34%;
+    width: 100%;
+}
+    .banner-block .animation-circle-inverse > span {
+    width: 60px;
+    height: 60px;
+}
+    .banner-block .animation-circle-inverse.left {
+    top: 300px;
+}
+    .about-inner {
+    padding: 40px 23px 30px;
+}
+    .join-text p {
+    padding-right: 10px;
+}
+    .price-plan {
+    padding: 30px 17px;
+}
+    .slidNext {
+    right: -4%;
+}
+
+.slidprev {
+    left: 2%;
+}
+    .yoga-sec {
+    padding-top: 0px;
+    height: 580px;
+}
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .logo_container img {
+    width: 100px;
+}
+   .banner-l {
+    top: 71%;
+}
+    .banner-text h1 {
+    font-size: 36px;
+}
+    .banner-block img {
+    padding-top: 34%;
+    width: 100%;
+}
+    .banner-yoga {
+    width: 40%;
+    right: 6%;
+    top: 51%;
+}
+    .banner-block .animation-circle-inverse > span {
+    width: 50px;
+    height: 50px;
+}
+    .banner-block .animation-circle-inverse.left {
+    top: 230px;
+}
+    .banner-btn {
+    margin-top: 30px;
+}
+    .about-inner {
+    padding: 40px 23px 30px;
+}
+    .join-text p {
+    padding-right: 0px;
+}
+    .price-plan {
+    padding: 30px 17px;
+}
+    .next-level-page .row,
+.next-level .row{
+        -webkit-box-orient: vertical;
+    -webkit-box-direction: reverse;
+    -ms-flex-direction: column-reverse;
+    flex-direction: column-reverse;
+    }
+    .next-block {
+    text-align: center;
+}
+    .white-btn a {
+    padding: 12px 27px;
+    margin-top: 45px;
+}
+    .slidNext {
+    right: -5%;
+}
+
+.slidprev {
+    left: 2%;
+}
+    .cont-icon-pad {
+    padding-left: 20px;
+}
+    .footer-text p {
+    font-size: 14px;
+}
+    .next-level-page .next-block img{
+        margin-top: 60px;
+    }
+    .next-level-page .next-block .animation-circle-inverse.left {
+    top: 284px;
+    right: 58%;
+}
+    .level-about-txt p {
+    padding-top: 40px;
+}
+    .yoga-sec,
+    .next-level-page{
+        text-align: center;
+    }
+    .yoga-sec .level-detail {
+    padding-top: 5px;
+}
+    .yoga-sec{
+        height: 980px;
+    }
+    .header-color {
+    height: 95px;
+}
+    
+}
+
+@media only screen and (max-width: 767px) {
+    header nav {
+    background-color: rgba(255, 255, 255, 0.97);
+    }
+    .logo_container img {
+    width: 100px;
+            top: 23px;
+}
+    .toggle-btn {
+    top: 13px;
+    height: 50px;
+    width: 50px;
+    padding: 16px;
+}
+.toggle-btn .bar:nth-child(2) {
+    top: 20px;
+}
+    .toggle-btn .bar:nth-child(3) {
+    top: 25px;
+}
+    .toggle-btn .bar:nth-child(4) {
+    top: 29px;
+}
+    .navcss {
+    height: 80px;
+}
+    header nav ul li a {
+    font-size: 20px;
+    padding: 5px 0;
+    word-spacing: 2px;
+}
+    .banner{
+        background: #ff6e79;
+        min-height: 100vh;
+    }
+    .banner-l {
+    width: 100%;
+    top: 56%;
+    transform: translate(-50%,-50%);
+    left: 50%;
+}
+    .banner-text h3,
+    .banner-text h1,
+    .banner-text p{
+        color: #fff!important;
+    }
+    .banner-text h1{
+        font-size: 24px;
+        line-height: 32px;
+    }
+    .banner-text h3{
+        padding-bottom: 14px;
+    }
+    .banner-text{
+    text-align: center;
+}
+    .section-head h2 {
+    font-size: 23px;
+    letter-spacing: 1px;
+    word-spacing: 0px;
+        padding-bottom: 40px;
+}
+    .next-level-page .row,
+    .next-level .row{
+        webkit-box-orient: vertical;
+    -webkit-box-direction: reverse;
+    -ms-flex-direction: column-reverse;
+    flex-direction: column-reverse;
+    }
+    .level-detail{
+        text-align: center;
+    }
+    .next-block .animation-circle-inverse.left{
+        display: none;
+    }
+    .level-detail h1 {
+    line-height: 32px;
+    font-size: 24px;
+    letter-spacing: 1px;
+    word-spacing: 0px;
+}
+    .level-detail p {
+    font-size: 16px;
+}
+    .next-block img{
+        padding-top: 40px;
+    }
+    .testimonial-inner {
+    margin: 20px 0;
+    padding: 40px 20px 20px;
+}
+    .testimonial-inner p {
+    font-size: 16px;
+    line-height: 24px;
+}
+    .join-text{
+        text-align: center;
+    }
+    .join-text h3 {
+    line-height: 34px;
+    font-size: 26px;
+    letter-spacing: 2px;
+}
+    .join-text p {
+    font-size: 16px;
+    line-height: 28px;
+    padding-right: 0;
+}
+    .white-btn {
+    text-align: center;
+}
+    .contact-shad{
+        display: inline-block;
+    text-align: center;
+    }
+    .cont-head h3 {
+    width: auto;
+    line-height: 31px;
+    font-size: 25px;
+    word-spacing: 1px;
+    letter-spacing: 2px;
+    padding-bottom: 20px;
+}
+    .cont-icon-pad {
+    padding-left: 0;
+}
+    .contact-shad {
+    padding: 30px 20px;
+}
+   .footer-text p {
+    padding-bottom: 16px;
+    font-size: 13px;
+}
+    .footer-menu ul {
+    float: none;
+            display: inline-block;
+}
+    .footer-menu,
+    .footer-text{
+        text-align: center;
+    }
+    .white-btn {
+    text-align: center;
+}
+    .common {
+    padding-top: 65px;
+}
+    .red-left {
+    border-top-left-radius: 0px;
+}
+    .red-right {
+    border-top-right-radius: 0px;
+}
+    .red-bot-left {
+    border-bottom-left-radius: 0px;
+}
+    .red-bot-right {
+    border-bottom-right-radius: 0px;
+}
+    .bread-inner h1 {
+    font-size: 28px;
+}
+    .bread-inner {
+    padding: 190px 0 150px;
+}
+    .next-level-page {
+    padding-top: 60px;
+}
+    .yoga-sec .level-detail {
+    padding-top: 0;
+}
+    .yoga-sec {
+    height: auto;
+}
+    .yoga-block img {
+    -webkit-animation: up-down 0s linear infinite;
+    animation: up-down 0s linear infinite;
+}
+    .instructor {
+    margin-top: 10px;
+}
+    .error-btm-txt h3 {
+    font-size: 32px;
+}
+    .error-btm-txt p {
+    padding: 0 0px;
+}
+    .header-color {
+    height: 78px;
+}
+    .error-page img {
+    padding-top: 160px;
+}
+    .preloader .animation-circle-inverse > span {
+    left: 47%;
+}
+    #toggle:checked + label.toggle-btn .bar:nth-child(1) {
+    -webkit-transform: translate(-47%, 7px) rotate(42deg);
+    transform: translate(-47%, 7px) rotate(42deg);
+}
+    #toggle:checked + label.toggle-btn .bar:nth-child(3) {
+    -webkit-transform: translate(-47%, -2px) rotate(-42deg);
+    transform: translate(-47%, -2px) rotate(-42deg);
+}
+}
+
+@media (min-width: 381px) and (max-width: 575px) {
+    
+}
+
+@media only screen and (max-width: 380px) {
+    
+}
