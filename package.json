@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "yarn get && yarn build && cd ../ && node app.js",
+    "start": "node app.js",
+    "heroku-postbuild": "cd client && yarn && yarn run build",
     "dev": "nodemon --ext js app.js",
     "get": "yarn && cd ./client && yarn"
   },
