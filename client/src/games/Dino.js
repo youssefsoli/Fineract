@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import isTouchingShoulder from '../../src/motionDetection';
+import { isInAir, isCrouching } from '../../src/motionDetection';
 import useSound from 'use-sound';
 import scoreSfx from './assets/score.mp3';
 
@@ -16,12 +16,10 @@ const Dino = ({ pose, canvasRef, ...props }) => {
 
             // some variables
             this.constant = 0;
-
             this.speed = 5;
-
             this.bX = 10;
-
             this.score = 0;
+            this.dinoState = 'ground';
 
             // pipe coordinates
             this.obstacles = [];
@@ -33,6 +31,15 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         const pose = canvasRef.current.pose;
         if (!pose || !game) return;
         ctx.fillStyle = '#000000';
+
+        if (isInAir(pose) && game.dinoState === 'ground') {
+            game.dinoState = 'jumping';
+            // jump stuff
+        }
+        if (isCrouching(pose) && game.dinoState === 'ground') {
+            game.dinoState = 'crouching';
+            // crouch stuff
+        }
 
         game.bird = bird.current;
         game.bg = bg.current;
