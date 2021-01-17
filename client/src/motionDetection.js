@@ -27,7 +27,6 @@ const isTouchingRightShoulder = (pose) => {
         Math.pow(rightWristPos.x - rightShoulderPos.x, 2) +
             Math.pow(rightWristPos.y - rightShoulderPos.y, 2)
     );
-    console.log(rightDistance);
 
     return rightDistance < 160 && rightWristPos.y < 300;
 };
