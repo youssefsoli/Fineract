@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { isInAir, isCrouching } from '../../src/motionDetection';
-import {updatePositions} from '../../src/utils'
+import {updatePositions} from '../../src/utils';
 import useSound from 'use-sound';
 import scoreSfx from './assets/score.mp3';
 
@@ -15,23 +15,23 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         constructor() {
             this.cvs = canvasRef.current;
 
-            document.addEventListener("keypress", (e) => {
+            document.addEventListener('keypress', (e) => {
                 if(canvasRef.current.game.over && e.key === ' ')
                     canvasRef.current.game = new Game();
             }, false);
 
             // some variables
             this.constant = 0;
-            this.over = false
-            this.upwards = 0
+            this.over = false;
+            this.upwards = 0;
             this.speed = 5;
             this.bX = 10;
             this.score = 0;
             this.dinoState = 'ground';
-            this.lastGround = 10
-            this.dinoY = canvasRef.current.height - 450
-            this.dinoYBase = canvasRef.current.height - 450
-            this.dinoMaxHeight = canvasRef.current.height * 0.5
+            this.lastGround = 10;
+            this.dinoY = canvasRef.current.height - 450;
+            this.dinoYBase = canvasRef.current.height - 450;
+            this.dinoMaxHeight = canvasRef.current.height * 0.5;
 
             this.bodyPositions = {
                 count: 0,
@@ -65,7 +65,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
                     count: 0,
                     avg: 0
                 }
-            }
+            };
 
             // pipe coordinates
             this.obstacles = [];
@@ -88,7 +88,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
 
         const cactusHeight = cvHeight * 0.2;
         // const cactusWidth = (cactusHeight * 309) / 533;
-        const cactusWidth = cactusHeight
+        const cactusWidth = cactusHeight;
 
         const birdHeight = cvHeight * 0.15;
         const birdWidth = birdHeight * 1.75;
@@ -100,7 +100,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         const crouchingDinoWidth = 200;
 
         if(game.over) {
-            ctx.textAlign = "center";
+            ctx.textAlign = 'center';
             ctx.fillStyle = '#000';
             ctx.font = '60px Verdana';
             ctx.fillText('Score : ' + game.score, game.cvs.width/2, game.cvs.height/2);
@@ -111,35 +111,35 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         }
 
         if (game.bodyPositions.count < 100) {
-            updatePositions(pose, game.bodyPositions)
+            updatePositions(pose, game.bodyPositions);
         }
 
         // check collisions
-        let collision = false
+        let collision = false;
 
-        const dinoTop = game.dinoY
-        const dinoBottom = game.dinoY + dinoHeight
-        const dinoX = dinoWidth
+        const dinoTop = game.dinoY;
+        const dinoBottom = game.dinoY + dinoHeight;
+        const dinoX = dinoWidth;
         for (let i = 0; i < game.obstacles.length; i++) {
-            let obstacle = game.obstacles[i]
+            let obstacle = game.obstacles[i];
 
-            if (obstacle.type === "cactus") {
-                const front = obstacle.x
-                const back = obstacle.x + cactusWidth
-                const top = obstacle.y
-                const bottom = obstacle.y + cactusHeight
+            if (obstacle.type === 'cactus') {
+                const front = obstacle.x;
+                const back = obstacle.x + cactusWidth;
+                const top = obstacle.y;
+                const bottom = obstacle.y + cactusHeight;
                 
                 if (front < dinoX && back > dinoX && dinoBottom > top) {
-                    collision = true
+                    collision = true;
                 }
             } else {
-                const front = obstacle.x
-                const back = obstacle.x + birdWidth
-                const top = obstacle.y
-                const bottom = obstacle.y + birdHeight
+                const front = obstacle.x;
+                const back = obstacle.x + birdWidth;
+                const top = obstacle.y;
+                const bottom = obstacle.y + birdHeight;
                 
                 if (front < dinoX && back > dinoX && dinoTop < bottom) {
-                    collision = true
+                    collision = true;
                 }
             }
         }
@@ -148,11 +148,11 @@ const Dino = ({ pose, canvasRef, ...props }) => {
             // game.over = true
         }
 
-        game.dinoYBase = canvasRef.current.height - 450
+        game.dinoYBase = canvasRef.current.height - 450;
 
         if (game.dinoState === 'jumping') {
-            console.log("jumping actions")
-            game.upwards += 2
+            console.log('jumping actions');
+            game.upwards += 2;
         } else if (game.dinoState === 'crouching') {
 
         } else {
@@ -163,7 +163,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
             //     // jump stuff
             // } else
             if (isCrouching(pose, game.bodyPositions, canvasRef.current.height)) {
-                console.log('crouching')
+                console.log('crouching');
             }
         }
 
@@ -225,15 +225,15 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         // ctx.drawImage(fg, 0, cvs.height - fg.height);
 
         if (game.bodyPositions.count < 100) {
-            game.dinoY = canvasRef.current.height - dinoHeight - 50
+            game.dinoY = canvasRef.current.height - dinoHeight - 50;
         } else {
-            const newDinoHeight = game.dinoY + game.upwards
+            const newDinoHeight = game.dinoY + game.upwards;
             if (newDinoHeight > game.dinoYBase) {
-                game.dinoY = game.dinoYBase
-                game.upwards = 0
-                game.dinoState = 'ground'
+                game.dinoY = game.dinoYBase;
+                game.upwards = 0;
+                game.dinoState = 'ground';
             } else {
-                game.dinoY = newDinoHeight
+                game.dinoY = newDinoHeight;
             }
         }
         
