@@ -59,6 +59,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     const pipeSouth = useRef(null);
     const [calibration, setCalibration] = useState(true);
     const history = useHistory();
+    const azureFrame = useRef(null);
 
     class Game {
         constructor() {
@@ -447,7 +448,13 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
                 className="hidden"
                 alt=""
             />
-            <iframe ref={azureFrame} title="a" style={{zIndex: 30, position: 'absolute', right: 30, top: 20}} src="https://gitvideocall.azurewebsites.net/?groupId=1bcc5dd0-58c2-11eb-8ca9-337a2b67a3ce"></iframe>
+            <iframe
+                ref={azureFrame}
+                title="a"
+                style={{zIndex: 30, position: 'absolute', right: 30, top: 20, borderStyle: 'none'}}
+                allow="camera;microphone"
+                src="https://gitvideocall.azurewebsites.net/?groupId=1bcc5dd0-58c2-11eb-8ca9-337a2b67a3ce">
+                </iframe>
         </>
     );
 };
