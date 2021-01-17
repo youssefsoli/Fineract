@@ -94,7 +94,6 @@ function App() {
                     }}
                 />
                 {canvasRef.current && <Dino pose={pose} canvasRef={canvasRef} />}
-            </header>
         </div>
     );
 }

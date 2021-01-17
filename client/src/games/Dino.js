@@ -15,7 +15,6 @@ const Dino = ({ pose, canvasRef, ...props }) => {
             this.cvs = canvasRef.current;
 
             // some variables
-            this.constant = 0;
             this.speed = 5;
             this.bX = 10;
             this.score = 0;
@@ -50,7 +49,8 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         const cvHeight = canvasRef.current.height;
 
         const cactusHeight = cvHeight * 0.2;
-        const cactusWidth = (cactusHeight * 309) / 533;
+        // const cactusWidth = (cactusHeight * 309) / 533;
+        const cactusWidth = cactusHeight
 
         const birdHeight = cvHeight * 0.15;
         const birdWidth = birdHeight * 1.75;
