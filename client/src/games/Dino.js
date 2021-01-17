@@ -73,9 +73,15 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
                 false
             );
 
-            // some variables
+            document.addEventListener(
+                ' ',
+                () => {
+                    canvasRef.current.game = new Game();
+                },
+                false
+            );
+
             this.tick = 0;
-            this.constant = 0;
             this.over = false;
             this.upwards = 0;
             this.speed = 10;
@@ -83,9 +89,8 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
             this.score = 0;
             this.dinoState = 'ground';
             this.crouchLeft = 10;
-            this.dinoY = canvasRef.current.height - 450;
-            this.dinoYBase = canvasRef.current.height - 450;
-            this.dinoMaxHeight = canvasRef.current.height * 0.5;
+            this.dinoY = canvasRef.current.height - canvasRef.current.height * 0.3 - 50;
+            this.dinoYBase = canvasRef.current.height - canvasRef.current.height * 0.3 - 50;
             this.cablibrationMode = true;
 
             this.bodyPositions = {
@@ -187,13 +192,11 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
         const birdHeight = cvHeight * 0.15;
         const birdWidth = birdHeight * 1.75;
 
-        const dinoHeight = 200;
-        const dinoWidth = 200;
+        const dinoHeight = cvHeight * 0.3;
+        const dinoWidth = dinoHeight;
 
-        const crouchingDinoWidth = 400;
+        const crouchingDinoWidth = dinoWidth;
         const crouchingDinoHeight = crouchingDinoWidth * (65 / 134);
-
-        drawPoint(ctx, game.bodyPositions.leftHip.avg, 20, 5, 'red');
 
         if (game.over) {
             ctx.textAlign = 'center';
@@ -407,7 +410,7 @@ const Dino = ({ pose, canvasRef, webcamRef, ...props }) => {
     // When pose updates
     useEffect(() => {
         canvasRef.current.pose = pose;
-        if (calibration) {
+        if (false && calibration) {
             calibrationRender();
         } else {
             let eventName;

@@ -54,7 +54,7 @@ const isInAir = (pose, bodyPositions, screenHeight) => {
         }
     }
 
-    const jumping = (diffSum / count) > screenHeight * 0.1
+    const jumping = (diffSum / count) > screenHeight * 0.15
 
     if (jumping) {
         console.log("decided to jump")
@@ -62,12 +62,12 @@ const isInAir = (pose, bodyPositions, screenHeight) => {
         console.log(partsUsed)
     }
 
-    if(diffSum > 0) {
-        console.log("diffs")
-        console.log(diffSum)
-        console.log(count)
-        console.log(partsUsed)
-    }
+    // if(diffSum > 0) {
+    //     console.log("diffs")
+    //     console.log(diffSum)
+    //     console.log(count)
+    //     console.log(partsUsed)
+    // }
 
 
     // const leftHipPos = pose.keypoints[keypointIndex.leftHip].position;
