@@ -40,4 +40,24 @@ const isInAir = (pose, normalHeight = 120, peakHeight = -30, factor = 0.75) => {
     return normalHeight - averageHipHeight > verticalDistance * factor;
 };
 
-export { isTouchingLeftShoulder, isTouchingRightShoulder, isInAir };
+const isCrouching = (
+    pose,
+    normalHeight = 410,
+    bottomHeight = 530,
+    factor = 0.5
+) => {
+    const leftShoulderPos = pose.keypoints[keypointIndex.leftShoulder].position;
+    const rightShoulderPos =
+        pose.keypoints[keypointIndex.rightShoulder].position;
+    const averageShoulderHeight = (leftShoulderPos.y + rightShoulderPos.y) / 2;
+    const verticalDistance = bottomHeight - normalHeight;
+
+    return averageShoulderHeight - normalHeight > verticalDistance * factor;
+};
+
+export {
+    isTouchingLeftShoulder,
+    isTouchingRightShoulder,
+    isInAir,
+    isCrouching,
+};
