@@ -13,28 +13,37 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
     class Game {
         constructor() {
             this.cvs = canvasRef.current;
+            console.log(this.cvs);
+
+            document.addEventListener("keypress", (e) => {
+                if(canvasRef.current.game.over && e.key === ' ')
+                    canvasRef.current.game = new Game();
+            }, false);
 
             // some variables
 
-            this.xScale = window.innerWidth / 500;
-            this.yScale = window.innerHeight / 500;
+            this.yScale = (window.innerHeight + window.innerWidth) / 1000;
+            this.xScale = this.yScale;
+
+            //console.log(this.xScale, this.yScale);
 
             this.gap = 85 * this.yScale;
             this.constant = 0;
 
-            this.speed = 2 * this.xScale;
+            this.speed = 4 * this.xScale;
 
             this.bX = 10;
             this.score = 0;
-            this.distanceBetweenPipes = 200 * this.xScale;
+            this.distanceBetweenPipes = 300 * this.xScale;
 
             // pipe coordinates
 
             this.pipe = [];
+            this.over = false;
 
             this.pipe[0] = {
-                x: this.cvs.width,
-                y: -this.cvs.height / 2,
+                x: window.innerWidth,
+                y: -300 * this.yScale,
             };
         }
     }
@@ -49,6 +58,18 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
         const game = canvasRef.current.game;
         const pose = canvasRef.current.pose;
         if (!pose || !game) return;
+
+        if(game.over) {
+            ctx.textAlign = "center";
+            ctx.fillStyle = '#000';
+            ctx.font = '60px Verdana';
+            ctx.fillText('Score : ' + game.score, game.cvs.width/2, game.cvs.height/2);
+
+            ctx.font = '30px Verdana';
+            ctx.fillText('Press Space to restart', game.cvs.width/2, game.cvs.height/2 + 60);
+            return;
+        }
+
         const { x, y } = pose.keypoints[0].position;
 
         game.bird = bird.current;
@@ -64,7 +85,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
         ) {
             game.pipe.push({
                 x: game.cvs.width,
-                y: randInt(-game.pipeNorth.height * game.yScale + 300, -300),
+                y: randInt(-game.pipeNorth.height * game.yScale + (100 * game.yScale), game.pipeNorth.height * game.yScale -(600 * game.yScale)),
             });
 
             game.speed += 0.1;
@@ -98,13 +119,14 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
             // detect collision
 
             if (
-                game.bX + game.bird.width >= game.pipe[i].x &&
+                game.bX + game.bird.width * game.xScale/2 >= game.pipe[i].x &&
                 game.bX <=
                     game.pipe[i].x + game.pipeNorth.width * game.xScale &&
                 (y <= game.pipe[i].y + game.pipeNorth.height * game.yScale ||
-                    y + game.bird.height >= game.pipe[i].y + game.constant)
+                    y + game.bird.height * game.yScale/2 >= game.pipe[i].y + game.constant)
             ) {
-                canvasRef.current.game = new Game();
+                game.over = true;
+                //canvasRef.current.game = new Game();
                 return;
             }
         }
@@ -135,9 +157,10 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
         ctx.arc(x / 8, y / 8, 5, 0, 2 * Math.PI);
         ctx.fill();
 
+        ctx.textAlign = "center";
         ctx.fillStyle = '#000';
         ctx.font = '20px Verdana';
-        ctx.fillText('Score : ' + game.score, 10, game.cvs.height - 20);
+        ctx.fillText('Score : ' + game.score, 60, game.cvs.height - 20);
     };
 
     const render = () => {
