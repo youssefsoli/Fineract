@@ -17,7 +17,7 @@ const About = () => {
                     </div>
                     <div class="col-lg-6 col-md-12">
                         <div class="level-detail">
-                            <h3>Welcome To **SUPER COOL APP NAME**</h3>
+                            <h3>Welcome To Fineract</h3>
                             <h1 class="heading-font">
                 Let's get you started
                             </h1>
