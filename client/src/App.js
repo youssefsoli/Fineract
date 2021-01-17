@@ -233,20 +233,20 @@ function App() {
                             )}
                         </div>
                     </Route>
-                    <Route path="/DinoCalibrate">
+                    <Route path="/dino">
                         <div className="App">
                             <Webcam
                                 ref={webcamRef}
                                 style={{
                                     position: 'absolute',
-                                    marginLeft: '0',
-                                    marginRight: '0',
+                                    marginLeft: 'auto',
+                                    marginRight: 'auto',
                                     left: 0,
                                     right: 0,
                                     textAlign: 'center',
                                     zIndex: 8,
                                     width: 'auto',
-                                    height: '80%',
+                                    height: '100%',
                                 }}
                             />
                             <canvas
@@ -260,7 +260,7 @@ function App() {
                                     textAlign: 'center',
                                     zIndex: 9,
                                     width: 'auto',
-                                    height: '80%',
+                                    height: '100%',
                                 }}
                             />
                             {canvasRef.current && (
