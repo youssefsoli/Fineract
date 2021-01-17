@@ -486,7 +486,7 @@ const Dino = ({ pose, canvasRef, webcamRef, setNav, ...props }) => {
     // When pose updates
     useEffect(() => {
         canvasRef.current.pose = pose;
-        if (false && calibration) {
+        if (calibration) {
             calibrationRender();
         } else {
             let eventName;
