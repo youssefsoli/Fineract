@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { isInAir, isCrouching } from '../../src/motionDetection';
+import {updatePositions} from '../../src/utils'
 import useSound from 'use-sound';
 import scoreSfx from './assets/score.mp3';
 
 const Dino = ({ pose, canvasRef, ...props }) => {
-    const [playScore] = useSound(scoreSfx);
+    // const [playScore] = useSound(scoreSfx);
     const bird = useRef(null);
     const bg = useRef(null);
     const dino = useRef(null);
@@ -21,9 +22,44 @@ const Dino = ({ pose, canvasRef, ...props }) => {
             this.bX = 10;
             this.score = 0;
             this.dinoState = 'ground';
+            this.lastGround = 10
             this.dinoY = canvasRef.current.height - 300
             this.dinoYBase = canvasRef.current.height - 300
             this.dinoMaxHeight = canvasRef.current.height * 0.5
+
+            this.bodyPositions = {
+                count: 0,
+                leftShoulder: {
+                    sum: 0,
+                    count: 0,
+                    avg: 0
+                },
+                rightShoulder: {
+                    sum: 0,
+                    count: 0,
+                    avg: 0
+                },
+                leftHip: {
+                    sum: 0,
+                    count: 0,
+                    avg: 0
+                },
+                rightHip: {
+                    sum: 0,
+                    count: 0,
+                    avg: 0
+                },
+                leftKnee: {
+                    sum: 0,
+                    count: 0,
+                    avg: 0
+                },
+                rightKnee: {
+                    sum: 0,
+                    count: 0,
+                    avg: 0
+                }
+            }
 
             // pipe coordinates
             this.obstacles = [];
@@ -36,21 +72,26 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         if (!pose || !game) return;
         ctx.fillStyle = '#000000';
 
+        if (game.bodyPositions.count < 100) {
+            updatePositions(pose, game.bodyPositions)
+        }
+
+        game.dinoYBase = canvasRef.current.height - 300
+
         if (game.dinoState === 'jumping') {
-            game.upwards -= 2
+            console.log("jumping actions")
+            game.upwards += 2
         } else if (game.dinoState === 'crouching') {
 
         } else {
-            if (isInAir(pose)) {
-                game.upwards = 50
-                console.log("jumping")
-                game.dinoState = 'jumping';
-                // jump stuff
-            }
-            if (isCrouching(pose)) {
-                game.dinoState = 'crouching';
+            // if (isInAir(pose, game.bodyPositions, canvasRef.current.height)) {
+            //     game.upwards = -50
+            //     console.log("taking action")
+            //     game.dinoState = 'jumping';
+            //     // jump stuff
+            // } else
+            if (isCrouching(pose, game.bodyPositions, canvasRef.current.height)) {
                 console.log('crouching')
-                // crouch stuff
             }
         }
 
@@ -107,7 +148,7 @@ const Dino = ({ pose, canvasRef, ...props }) => {
 
             if (game.obstacles[i].x === 5) {
                 game.score++;
-                playScore();
+                // playScore();
             }
 
             if (game.obstacles[i].x < 0) {
@@ -127,22 +168,38 @@ const Dino = ({ pose, canvasRef, ...props }) => {
         }
 
         // ctx.drawImage(fg, 0, cvs.height - fg.height);
-        const newDinoHeight = game.dinoY + game.upwards
-        if (newDinoHeight < game.dinoYBase) {
-            game.dinoY = game.dinoYBase
-            game.upwards = 0
-            game.dinoState = 'ground'
-        } else {
-            game.dinoY = newDinoHeight
-        }
 
-        ctx.drawImage(
-            dino.current,
-            game.bX,
-            game.dinoY,
-            dinoHeight,
-            dinoWidth
-        );
+        if (game.bodyPositions.count < 100) {
+            game.dinoY = canvasRef.current.height - 300
+        } else {
+            const newDinoHeight = game.dinoY + game.upwards
+            if (newDinoHeight > game.dinoYBase) {
+                game.dinoY = game.dinoYBase
+                game.upwards = 0
+                game.dinoState = 'ground'
+            } else {
+                game.dinoY = newDinoHeight
+            }
+        }
+        
+        if (game.dinoState === 'crouching') {
+            ctx.drawImage(
+                bird.current,
+                game.bX,
+                game.dinoY,
+                dinoHeight,
+                dinoWidth
+            );
+        } else {
+            ctx.drawImage(
+                dino.current,
+                game.bX,
+                game.dinoY,
+                dinoHeight,
+                dinoWidth
+            );
+        }
+        
 
         ctx.fillStyle = '#000';
         ctx.font = '20px Verdana';
@@ -150,7 +207,6 @@ const Dino = ({ pose, canvasRef, ...props }) => {
     };
 
     const render = () => {
-        console.log("starting up")
         const context = canvasRef.current.getContext('2d');
         draw(context);
         //ctx.drawImage(background, 0, 0);
