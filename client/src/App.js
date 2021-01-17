@@ -82,8 +82,7 @@ function App() {
                                         <div className="col-md-6 banner-l">
                                             <div className="banner-text">
                                                 <h3>
-                                                    Welcome To **SUPER COOL APP
-                                                    NAME**
+                                                    Welcome To Fineract
                                                 </h3>
                                                 {/* TODO: Write Cool APP name and better moto */}
                                                 <h1 className="heading-font">

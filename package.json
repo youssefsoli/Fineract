@@ -6,7 +6,8 @@
     "start": "node app.js",
     "heroku-postbuild": "cd client && yarn && yarn run build",
     "dev": "nodemon --ext js app.js",
-    "get": "yarn && cd ./client && yarn"
+    "get": "yarn && cd ./client && yarn",
+    "build": "cd ./client && yarn build && cd ../ && node app.js"
   },
   "repository": "https://github.com/youssefsoli/HackTheNorth.git",
   "author": "youssefsoli <youssefdevelops@gmail.com>",
