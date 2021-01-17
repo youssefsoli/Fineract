@@ -1,7 +1,6 @@
 import './App.css';
 import React, { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
-import * as posenet from '@tensorflow-models/posenet';
 import FlappyBird from './games/FlappyBird';
 import useNet from './useLoadNet';
 

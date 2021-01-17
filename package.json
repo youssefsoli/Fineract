@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "cd ./client && yarn build && cd ../ && node app.js",
+    "start": "yarn get && yarn build && cd ../ && node app.js",
     "dev": "nodemon --ext js app.js",
     "get": "yarn && cd ./client && yarn"
   },

@@ -85,7 +85,7 @@ const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
         ) {
             game.pipe.push({
                 x: game.cvs.width,
-                y: randInt(-game.pipeNorth.height * game.yScale + (100 * game.yScale), game.pipeNorth.height * game.yScale -(600 * game.yScale)),
+                y: randInt((100 - game.pipeNorth.height) * game.yScale, (game.cvs.height - game.pipeNorth.height - 100) * game.yScale),
             });
 
             game.speed += 0.1;
