@@ -3,7 +3,7 @@ import useSound from 'use-sound';
 import scoreSfx from './assets/score.mp3';
 import isTouchingShoulder from '../../src/motionDetection';
 
-const FlappyBird = ({ pose, canvasRef, ...props }) => {
+const FlappyBird = ({ pose, canvasRef, webcamRef, ...props }) => {
     const [playScore] = useSound(scoreSfx);
     const bird = useRef(null);
     const bg = useRef(null);
@@ -16,14 +16,17 @@ const FlappyBird = ({ pose, canvasRef, ...props }) => {
 
             // some variables
 
-            this.gap = 85;
+            this.xScale = window.innerWidth / 500;
+            this.yScale = window.innerHeight / 500;
+
+            this.gap = 85 * this.yScale;
             this.constant = 0;
 
-            this.speed = 8;
+            this.speed = 2 * this.xScale;
 
             this.bX = 10;
             this.score = 0;
-            this.distanceBetweenPipes = 200;
+            this.distanceBetweenPipes = 200 * this.xScale;
 
             // pipe coordinates
 
@@ -31,16 +34,21 @@ const FlappyBird = ({ pose, canvasRef, ...props }) => {
 
             this.pipe[0] = {
                 x: this.cvs.width,
-                y: 0,
+                y: -this.cvs.height / 2,
             };
         }
     }
 
-    const draw = (ctx) => {
+    const randInt = (min, max) => {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    };
+
+    const draw = ctx => {
         const game = canvasRef.current.game;
         const pose = canvasRef.current.pose;
         if (!pose || !game) return;
-        ctx.fillStyle = '#000000';
         const { x, y } = pose.keypoints[0].position;
 
         game.bird = bird.current;
@@ -48,32 +56,41 @@ const FlappyBird = ({ pose, canvasRef, ...props }) => {
         game.pipeNorth = pipeNorth.current;
         game.pipeSouth = pipeSouth.current;
 
-        ctx.drawImage(game.bg, 0, 0);
+        ctx.drawImage(game.bg, 0, 0, window.innerWidth, window.innerHeight);
 
         if (
             game.pipe[game.pipe.length - 1].x <
             game.cvs.width - game.distanceBetweenPipes
         ) {
-            console.log('56');
             game.pipe.push({
                 x: game.cvs.width,
-                y:
-                    Math.floor(Math.random() * game.pipeNorth.height) -
-                    game.pipeNorth.height,
+                y: randInt(-game.pipeNorth.height * game.yScale + 300, -300),
             });
+
+            game.speed += 0.1;
         }
 
-        if (game.pipe[0].x < 0) {
+        if (game.pipe[0].x < -game.pipeNorth.width * game.xScale) {
             game.pipe.splice(0, 1);
+            game.score++;
+            playScore();
         }
 
         for (let i = 0; i < game.pipe.length; i++) {
-            game.constant = game.pipeNorth.height + game.gap;
-            ctx.drawImage(game.pipeNorth, game.pipe[i].x, game.pipe[i].y);
+            game.constant = pipeNorth.current.height * game.yScale + game.gap;
+            ctx.drawImage(
+                game.pipeNorth,
+                game.pipe[i].x,
+                game.pipe[i].y,
+                game.pipeNorth.width * game.xScale,
+                game.pipeNorth.height * game.yScale
+            );
             ctx.drawImage(
                 game.pipeSouth,
                 game.pipe[i].x,
-                game.pipe[i].y + game.constant
+                game.pipe[i].y + game.constant,
+                game.pipeSouth.width * game.xScale,
+                game.pipeSouth.height * game.yScale
             );
 
             game.pipe[i].x -= game.speed;
@@ -82,22 +99,41 @@ const FlappyBird = ({ pose, canvasRef, ...props }) => {
 
             if (
                 game.bX + game.bird.width >= game.pipe[i].x &&
-                game.bX <= game.pipe[i].x + game.pipeNorth.width &&
-                (y <= game.pipe[i].y + game.pipeNorth.height ||
+                game.bX <=
+                    game.pipe[i].x + game.pipeNorth.width * game.xScale &&
+                (y <= game.pipe[i].y + game.pipeNorth.height * game.yScale ||
                     y + game.bird.height >= game.pipe[i].y + game.constant)
             ) {
-                console.log('fail');
-            }
-
-            if (game.pipe[i].x === 4) {
-                game.score++;
-                playScore();
+                canvasRef.current.game = new Game();
+                return;
             }
         }
 
         //ctx.drawImage(fg, 0, cvs.height - fg.height);
 
-        ctx.drawImage(bird.current, game.bX, y);
+        ctx.drawImage(
+            game.bird,
+            game.bX,
+            y,
+            game.bird.width * game.xScale,
+            game.bird.height * game.yScale
+        );
+
+        // Draw face
+        ctx.drawImage(
+            webcamRef.current.video,
+            0,
+            0,
+            window.innerWidth / 8,
+            window.innerHeight / 8
+        );
+
+        // Draw dot on face
+
+        ctx.fillStyle = 'red';
+        ctx.beginPath();
+        ctx.arc(x / 8, y / 8, 5, 0, 2 * Math.PI);
+        ctx.fill();
 
         ctx.fillStyle = '#000';
         ctx.font = '20px Verdana';
